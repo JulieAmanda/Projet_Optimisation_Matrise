@@ -21,7 +21,7 @@ ILOSTLBEGIN
 //if (useBenders==1)
 //cplex.setParam(IloCplex::Param::Benders::Strategy, 3);
 
-void ssPbSrc_i( int numSrc, float * tAlpha, float nu, int * ValX_ij, int Offre_i,
+void ssPbSrc_i( int numSrc, float * LgrgeMultpipl_i, float nu, int * ValX_ij, int Offre_i,
                int * val_U_ij, int * val_C_ij, int * val_F_ij, int n, float & valObj){
     
 
@@ -31,6 +31,9 @@ IloCplex cplex(mod); // instance du solveur à utiliser.
 
 //limitons le nombre de processeurs
 cplex.setParam(IloCplex::Param::Threads, 1);
+    
+    //BLOCKER L'AFFICHAGE DES DÉTails d'optimisation
+    cplex.setParam(IloCplex::Param::MIP::Display, 0);
 
   //** on convertit les tableaux Val_(C|U|F)_ij du type entier ver le type entier de iloconcert
     
@@ -53,9 +56,9 @@ cplex.setParam(IloCplex::Param::Threads, 1);
     for(int j=0; j<n ; j++)
         F_ij[j]= val_F_ij[j];
     
-    IloIntArray  alpha (env, n);
+    IloIntArray  tLgrgeMultpipl_i (env, n);
     for(int j=0; j<n ; j++)
-        alpha[j]= tAlpha[j];
+        tLgrgeMultpipl_i[j]= LgrgeMultpipl_i[j];
     
     
 
@@ -70,7 +73,7 @@ cplex.setParam(IloCplex::Param::Threads, 1);
     // ***construisons l'expression de la fonction objetif
     
     IloExpr obj(env);
-    obj=nu*(IloScalProd(C_ij, x_i) + IloScalProd(F_ij, y_i))- IloScalProd(alpha, x_i);
+    obj=nu*(IloScalProd(C_ij, x_i) + IloScalProd(F_ij, y_i))- IloScalProd(tLgrgeMultpipl_i, x_i);
    
     //cout << IloScalProd(C_ij, x_i) + IloScalProd(F_ij, y_i)<<endl;
     
@@ -103,11 +106,14 @@ cplex.setParam(IloCplex::Param::Threads, 1);
     // ------------------ AFFICHAGE ET OPTIMISATION ----------------
     
     // export du PL créé dans un fichier .lp
-    cplex.exportModel("/Users/julieamanda/Documents/WorkspaceMem/test.lp");
+    //cplex.exportModel("/Users/julieamanda/Documents/WorkspaceMem/test.lp");
+    
     // résolution
     cplex.solve();
+    
     // export de la solution dans un fichier texte
-    cplex.writeSolution("/Users/julieamanda/Documents/WorkspaceMem/sol.txt");
+    //cplex.writeSolution("/Users/julieamanda/Documents/WorkspaceMem/sol.txt");
+    
     // récupère la solution et l'affiche à l'écran
     //cout << endl <<" valeur de l'objectif = " << cplex.getObjValue() << endl;
     // cout << "algo utilisé"<< cplex.getAlgorithm() <<endl;
@@ -137,7 +143,7 @@ cplex.setParam(IloCplex::Param::Threads, 1);
 //la fonction du sous pb du coté destination
 
 
-void ssPbDest_j( int numDest, float * tAlpha, float nu, int * ValW_ij, int Demand_j,
+void ssPbDest_j( int numDest, float * LgrgeMultpipl_j, float nu, int * ValW_ij, int Demand_j,
                 int * val_U_ij, int * val_C_ij, int * val_F_ij, int m, float & valObj)
     {
         
@@ -148,6 +154,9 @@ void ssPbDest_j( int numDest, float * tAlpha, float nu, int * ValW_ij, int Deman
         
         //limitons le nombre de processeurs
         cplex.setParam(IloCplex::Param::Threads, 1);
+        
+        //BLOCKER L'AFFICHAGE DES DÉTails d'optimisation
+          cplex.setParam(IloCplex::Param::MIP::Display, 0);
         
         //** on convertit les tableaux Val_(C|U|F)_ij du type entier ver le type entier de iloconcert
         
@@ -170,9 +179,9 @@ void ssPbDest_j( int numDest, float * tAlpha, float nu, int * ValW_ij, int Deman
         for(int j=0; j<m ; j++)
             F_ij[j]= val_F_ij[j];
         
-        IloIntArray  alpha (env, m);
+        IloIntArray  tLgrgeMultpipl_j (env, m);
         for(int j=0; j<m ; j++)
-            alpha[j]= tAlpha[j];
+            tLgrgeMultpipl_j[j]= LgrgeMultpipl_j[j];
         
         
         
@@ -189,7 +198,7 @@ void ssPbDest_j( int numDest, float * tAlpha, float nu, int * ValW_ij, int Deman
         
         
         IloExpr obj(env);
-        obj=(1-nu) * (IloScalProd(C_ij, w_i) + IloScalProd(F_ij, z_i)) + IloScalProd(alpha, w_i);
+        obj=(1-nu) * (IloScalProd(C_ij, w_i) + IloScalProd(F_ij, z_i)) + IloScalProd(tLgrgeMultpipl_j, w_i);
         
        // cout << IloScalProd(C_ij, w_i) + IloScalProd(F_ij, z_i) << endl;
         IloObjective objectif (env, obj, IloObjective::Minimize, "OBJ");
@@ -221,13 +230,15 @@ void ssPbDest_j( int numDest, float * tAlpha, float nu, int * ValW_ij, int Deman
         // ------------------ AFFICHAGE ET OPTIMISATION ----------------
         
         // export du PL créé dans un fichier .lp
-        cplex.exportModel("/Users/julieamanda/Documents/WorkspaceMem/test.lp");
+        //cplex.exportModel("/Users/julieamanda/Documents/WorkspaceMem/test.lp");
+        
         // résolution
         cplex.solve();
+        
         // export de la solution dans un fichier texte
-        cplex.writeSolution("/Users/julieamanda/Documents/WorkspaceMem/sol.txt");
+        //cplex.writeSolution("/Users/julieamanda/Documents/WorkspaceMem/sol.txt");
+        
         // récupère la solution et l'affiche à l'écran
-       
         // cout << "algo utilisé"<< cplex.getAlgorithm() <<endl;
         
         valObj= cplex.getObjValue();
@@ -243,25 +254,42 @@ void ssPbDest_j( int numDest, float * tAlpha, float nu, int * ValW_ij, int Deman
             cout << cplex.getValue(z_i[j]) << "  " ;
         }
         
-    
-    
-    /*    cout << endl<< "x= "<<endl;
-     for (int i=0; i< m; i++){
-     cout << endl;
-     for (int j=0; j<n; j++){
-     cout << cplex.getValue(x[i][j]) << "  " ;
-     
-     }}
-     
-     cout << endl<< "y = "<<endl;
-     for (int i=0; i< m; i++){
-     cout << endl;
-     for (int j=0; j<n; j++){
-     cout << cplex.getValue(y[i][j]) << "  ";
-     
-     }}
-     */
+   
     env.end();
 
 
+}
+
+
+void affich_subPbData (  int nodeValue, int * t1, int * t2, int *t3, int m, int n){
+    
+    
+    cout << endl;
+    cout << "offre/Demande : " <<nodeValue <<endl;
+    
+    cout <<"table des capacités : " <<endl;
+    for (int i=0; i<m ; i++)
+        cout << t1[i] << " ";
+    
+    cout << endl;
+    cout <<"table des CoutVar : " <<endl;
+    for (int i=0; i<m; i++)
+        cout << t2[i] << " ";
+    
+    cout << endl;
+    cout <<"table des coutFix : " <<endl;
+    for (int i=0; i<m; i++)
+        cout << t3[i] << " ";
+    cout << endl;
+    
+    //cout << " ---- ----    résolution du sous problème  ---- ----" << endl;
+    cout << endl;
+    
+    
+}
+
+void makeSpace(){
+    cout << endl;
+    cout << endl;
+    cout << endl;
 }

@@ -1,0 +1,663 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fnil\fcharset0 Menlo-Italic;\f1\fnil\fcharset0 Menlo-Regular;\f2\fnil\fcharset0 Menlo-Bold;
+}
+{\colortbl;\red255\green255\blue255;\red83\green101\blue121;\red255\green255\blue255;\red0\green0\blue0;
+\red100\green56\blue32;\red196\green26\blue22;\red155\green35\blue147;\red92\green38\blue153;\red28\green0\blue207;
+\red63\green80\blue98;}
+{\*\expandedcolortbl;;\csgenericrgb\c32401\c39745\c47507;\csgenericrgb\c100000\c100000\c100000;\csgenericrgb\c0\c0\c0;
+\csgenericrgb\c39147\c22031\c12446;\csgenericrgb\c77000\c10200\c8600;\csgenericrgb\c60759\c13753\c57628;\csgenericrgb\c35922\c14825\c60191;\csgenericrgb\c11000\c0\c81000;
+\csgenericrgb\c24790\c31335\c38289;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab593
+\pard\tx593\pardeftab593\pardirnatural\partightenfactor0
+
+\f0\i\fs24 \cf2 \cb3 //
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  sample.hpp
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  ESSAIE1
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  Created by JULIE AMANDA TCHOUANDEM KEMOE on 2020-07-18.
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //
+\f1\i0 \cf4 \
+\
+\cf5 #ifndef sample_hpp\cf4 \
+\cf5 #define sample_hpp\cf4 \
+\
+\cf5 #include \cf6 <stdio.h>\cf4 \
+\cf5 #include \cf6 <string>\cf4 \
+\
+
+\f2\b \cf7 using
+\f1\b0 \cf4  
+\f2\b \cf7 namespace
+\f1\b0 \cf4  \cf8 std\cf4 ;\
+\
+
+\f0\i \cf2 //on va declarer les donn\'e9es et structures dans lesquelles on va stocker les donn\'e9es extraites du fichier
+\f1\i0 \cf4 \
+\
+\
+
+\f2\b \cf7 int
+\f1\b0 \cf4  uploadData( \cf8 string\cf4  line, 
+\f2\b \cf7 int
+\f1\b0 \cf4  pos, 
+\f2\b \cf7 int
+\f1\b0 \cf4  &posSuiv);\
+
+\f0\i \cf2 // on va lire les donn\'e9es de la ligne line \'e0 partir de la position pos
+\f1\i0 \cf4 \
+\
+
+\f2\b \cf7 void
+\f1\b0 \cf4  get_M_N(
+\f2\b \cf7 int
+\f1\b0 \cf4  &m, 
+\f2\b \cf7 int
+\f1\b0 \cf4  &n); 
+\f0\i \cf2 // on va extraire les valeurs de m et n des fichiers
+\f1\i0 \cf4 \
+\
+
+\f2\b \cf7 void
+\f1\b0 \cf4  readInput_Dataset2( 
+\f2\b \cf7 int
+\f1\b0 \cf4  &m , 
+\f2\b \cf7 int
+\f1\b0 \cf4  &n, 
+\f2\b \cf7 int
+\f1\b0 \cf4  * tOffre_a, 
+\f2\b \cf7 int
+\f1\b0 \cf4  * tDemand_b, 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCoutVar, 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCoutFix );\
+
+\f0\i \cf2 //cette fonction permet de recuperer les donnees d'un fichier appartenant au dataset2
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //et de les stocker dans des structures de donn\'e9es pour les utiliser
+\f1\i0 \cf4 \
+\
+
+\f2\b \cf7 void
+\f1\b0 \cf4  readInput_Dataset3( 
+\f2\b \cf7 int
+\f1\b0 \cf4  &m , 
+\f2\b \cf7 int
+\f1\b0 \cf4  &n, 
+\f2\b \cf7 int
+\f1\b0 \cf4  * tOffre_a, 
+\f2\b \cf7 int
+\f1\b0 \cf4  * tDemand_b, 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCoutVar, 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCoutFix );\
+
+\f0\i \cf2 //cette fonction permet de recuperer les donnees d'un fichier appartenant au dataset #
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //et de les stocker dans des structures de donn\'e9es pour les utiliser
+\f1\i0 \cf4 \
+\
+
+\f0\i \cf2 // on va faire une fonction qui construit la table des capacit\'e9s pour chaque arc
+\f1\i0 \cf4 \
+
+\f2\b \cf7 void
+\f1\b0 \cf4  BuiltCapacity(
+\f2\b \cf7 int
+\f1\b0 \cf4  m, 
+\f2\b \cf7 int
+\f1\b0 \cf4  n , 
+\f2\b \cf7 int
+\f1\b0 \cf4  tOffre[], 
+\f2\b \cf7 int
+\f1\b0 \cf4  tDemand[], 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCapacity);\
+\
+\
+\cf5 #endif 
+\f0\i \cf2 /* sample_hpp */
+\f1\i0 \cf4 \
+\
+\
+\
+\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\'97\
+\
+\
+
+\f0\i \cf2 //
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  sample.cpp
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  ESSAIE1
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //  Created by JULIE AMANDA TCHOUANDEM KEMOE on 2020-07-18.
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //
+\f1\i0 \cf4 \
+\cf5 #include \cf6 "sample.hpp"\cf4 \
+\cf5 #include \cf6 "projectParameters.h"\cf4 \
+\cf5 #include \cf6 <iostream>\cf4 \
+\cf5 #include \cf6 <string.h>\cf4 \
+\cf5 #include \cf6 <fstream>\cf4 \
+\
+\
+
+\f2\b \cf7 using
+\f1\b0 \cf4  
+\f2\b \cf7 namespace
+\f1\b0 \cf4  std ;\
+\
+\
+\
+
+\f0\i \cf2 // recuperer la donn\'8ee ( data) qui se trouve   \'88 la position (pos) d'une ligne (line ) du fichier en lecture
+\f1\i0 \cf4 \
+
+\f2\b \cf7 int
+\f1\b0 \cf4  uploadData( string line, 
+\f2\b \cf7 int
+\f1\b0 \cf4  pos,  
+\f2\b \cf7 int
+\f1\b0 \cf4  &posSuiv)\
+
+\f0\i \cf2 //apres il faudra se rassurer du type de line lors de l appel de la fonction
+\f1\i0 \cf4 \
+\{\
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  data;\
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  i= pos ;\
+   
+\f0\i \cf2 // int tab[10] = \{ 0,1 , 2, 3,4, 5, 6, 7, 8, 9 \};
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 // int n = strlen(line);
+\f1\i0 \cf4 \
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  n = line.length();\
+    \
+    
+\f2\b \cf7 char
+\f1\b0 \cf4   s2= \cf9 \cb3 ' '\cf4 \cb3  ;\
+    \
+    
+\f2\b \cf7 while
+\f1\b0 \cf4 ( (i<n+\cf9 \cb3 1\cf4 \cb3 )  &&  ( line[i] == s2) )\
+        i+=\cf9 \cb3 1\cf4 \cb3 ;\
+    \
+  
+\f0\i \cf2 //  char * temp = new char[4] ;// on reserve de l'espace m\'e9moire pour recuperer les do\'e9es
+\f1\i0 \cf4 \
+    string a = \cf6 ""\cf4  ;
+\f0\i \cf2 //on va stocker ici la donn\'e9e \'88 recup\'e9rer
+\f1\i0 \cf4 \
+    \
+    
+\f2\b \cf7 while
+\f1\b0 \cf4  ( (i<n+\cf9 \cb3 1\cf4 \cb3 ) && ( line[i] != s2)  )\
+    \{\
+        a=a+line[i];\
+        i+=\cf9 \cb3 1\cf4 \cb3 ;\
+    \}\
+    posSuiv = i ;  
+\f0\i \cf2 // on garde la position suivante en memoire pour le prochain parcours
+\f1\i0 \cf4 \
+    data= stoi(a);  
+\f0\i \cf2 // on cast le caract\'e8re en int
+\f1\i0 \cf4 \
+    \
+    
+\f2\b \cf7 return
+\f1\b0 \cf4  data;\
+\}\
+\
+\
+\
+\
+
+\f2\b \cf7 void
+\f1\b0 \cf4  get_M_N( 
+\f2\b \cf7 int
+\f1\b0 \cf4  & m, 
+\f2\b \cf7 int
+\f1\b0 \cf4  & n )\
+\{\
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  posSuiv =\cf9 \cb3 0\cf4 \cb3   ;
+\f0\i \cf2 // on va s enservir pour suivre la lecture sur la ligne en lcture par possition
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 //ouverture en lecture de monFichier( fichier encours de traitement declare ds sample.h
+\f1\i0 \cf4 \
+    ifstream file( monFichier, ios::in);\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (file)\
+    \{\
+        \
+        
+\f2\b \cf7 if
+\f1\b0 \cf4 (datasetGroup==\cf9 \cb3 2\cf4 \cb3 )\
+        \{\
+            string line1;\
+            getline(file, line1);\
+            m = uploadData(line1, \cf9 \cb3 0\cf4 \cb3 ,  posSuiv);\
+            n = uploadData(line1, posSuiv, posSuiv);\
+        \}\
+        
+\f2\b \cf7 else
+\f1\b0 \cf4  
+\f2\b \cf7 if
+\f1\b0 \cf4  (datasetGroup==\cf9 \cb3 3\cf4 \cb3 )\
+        \{\
+            string line1;\
+            string line2;\
+            getline(file, line1);\
+            m = uploadData(line1, \cf9 \cb3 0\cf4 \cb3 ,  posSuiv);\
+            getline(file, line2);\
+            n = uploadData(line2, \cf9 \cb3 0\cf4 \cb3 ,  posSuiv);\
+        \}\
+        file.close();\
+    \}\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        cout << \cf6 "imposible de lire le fichier ! "\cf4 << endl;\
+\}\
+\
+
+\f0\i \cf2 //cette fonction permet de recuperer les donnees d'un fichier appartenant au dataset2
+\f1\i0 \cf4 \
+
+\f0\i \cf2 //et de les stocker dans des structures de donn\'e9es pour les utiliser
+\f1\i0 \cf4 \
+\
+\
+
+\f2\b \cf7 void
+\f1\b0 \cf4  readInput_Dataset2( 
+\f2\b \cf7 int
+\f1\b0 \cf4  &m , 
+\f2\b \cf7 int
+\f1\b0 \cf4  &n, 
+\f2\b \cf7 int
+\f1\b0 \cf4  * tOffre_a, 
+\f2\b \cf7 int
+\f1\b0 \cf4  * tDemand_b, 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCoutVar, 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCoutFix )\
+\{\
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  pos= \cf9 \cb3 0\cf4 \cb3 ;\
+    
+\f0\i \cf2 //on complete la construction des pointeurs d\'e9clar\'e9s dans le fichier d'entete
+\f1\i0 \cf4 \
+  
+\f0\i \cf2 /*  for (int i = 0; i < m; ++i)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         tCoutFix[i] = new int[n];
+\f1\i0 \cf4 \
+
+\f0\i \cf2     
+\f1\i0 \cf4 \
+
+\f0\i \cf2     for (int i = 0; i < m; ++i)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         tCoutVar[i] = new int[n];*/
+\f1\i0 \cf4 \
+    \
+    
+\f0\i \cf2 //ouverture en lecture de monFichier( fichier encours de traitement declare ds sample.h
+\f1\i0 \cf4 \
+    ifstream file( monFichier, ios::in);\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (file)\
+    \{\
+        \
+        string l_offre ; 
+\f0\i \cf2 //on va stocker ici la ligne ayant la quantit\'e9 d'offre de chaque sommet destination
+\f1\i0 \cf4 \
+        string  l_demand ; 
+\f0\i \cf2 //on va stocker ici la ligne ayant la quantit\'e9 de demande de chaque sommet destination
+\f1\i0 \cf4 \
+        string l_trash; 
+\f0\i \cf2 // on va utiliser ceci pour ecraser les lignes vides
+\f1\i0 \cf4 \
+        \
+        \
+        getline(file, l_trash);
+\f0\i \cf2 // on va ecraser la 1ere ligne car on a deja recuperer m et n
+\f1\i0 \cf4 \
+\
+        
+\f0\i \cf2 // recuperons chaque offre et stockons dans le tableau d'offre pour chaque sommet
+\f1\i0 \cf4 \
+        getline(file, l_offre);\
+        
+\f2\b \cf7 for
+\f1\b0 \cf4 (
+\f2\b \cf7 int
+\f1\b0 \cf4  i=\cf9 \cb3 0\cf4 \cb3 ; i<n ; i++)\
+        \{\
+            
+\f0\i \cf2 // pos = 0;//indique le premier caract\'e8re de la ligne
+\f1\i0 \cf4 \
+\
+            *(tOffre_a +i) = uploadData(l_offre, pos,  pos);\
+        \}\
+        \
+        
+\f0\i \cf2 // recuperons chaque demande et stockons dans le tableau de demande pour chaque sommet
+\f1\i0 \cf4 \
+        getline(file, l_demand);\
+        pos =\cf9 \cb3 0\cf4 \cb3 ;
+\f0\i \cf2 // on reinitialise la position initiale \'e0 0
+\f1\i0 \cf4 \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4 (
+\f2\b \cf7 int
+\f1\b0 \cf4  i=\cf9 \cb3 0\cf4 \cb3 ; i<n ; i++)\
+        \{\
+             
+\f0\i \cf2 //pos=0;
+\f1\i0 \cf4 \
+            *( tDemand_b + i) = uploadData(l_demand, pos,  pos);\
+        \}\
+        \
+        
+\f0\i \cf2 //on va maintenant lire les co\'fbtss fixes et stocker dans un tableau
+\f1\i0 \cf4 \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i=\cf9 \cb3 0\cf4 \cb3 ; i<m ; i++ )\
+        \{\
+             pos=\cf9 \cb3 0\cf4 \cb3 ;\
+            string lineCF; 
+\f0\i \cf2 //lire successivement les lignes contenant les couts fixes, recuperer les do\'e9es et stocker
+\f1\i0 \cf4 \
+            getline(file, lineCF);\
+            \cf10 \cb3 /// *(*(tCoutFix + i))\cf4 \cb3 \
+          tCoutFix[i][\cf9 \cb3 0\cf4 \cb3 ] = uploadData(lineCF, pos, pos);\
+            
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  j=\cf9 \cb3 1\cf4 \cb3 ; j<n; j++)\
+                
+\f0\i \cf2 // *(*(tCoutFix + i) +j )
+\f1\i0 \cf4 \
+                tCoutFix[i][j] = uploadData(lineCF, pos,  pos);\
+        \}\
+        \
+        getline(file, l_trash);\
+        \
+        \
+        \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i=\cf9 \cb3 0\cf4 \cb3 ; i<m ; i++ )\
+        \{\
+             pos=\cf9 \cb3 0\cf4 \cb3 ;\
+            string lineCV ;\
+            getline(file, lineCV);\
+            tCoutVar[i][\cf9 \cb3 0\cf4 \cb3 ]  = uploadData(lineCV, pos, pos);\
+            
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  j=\cf9 \cb3 1\cf4 \cb3 ; j<n; j++)\
+                tCoutVar[i][j]  = uploadData(lineCV, pos,  pos);\
+        \}\
+        \
+        file.close();\
+        \
+    \}\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        cout<<\cf6 "impossible de lire le fichier ! "\cf4 << endl;\
+    \
+    \
+\}\
+
+\f0\i \cf2 //\{\}
+\f1\i0 \cf4 \
+\
+
+\f2\b \cf7 void
+\f1\b0 \cf4  readInput_Dataset3( 
+\f2\b \cf7 int
+\f1\b0 \cf4  &m , 
+\f2\b \cf7 int
+\f1\b0 \cf4  &n, 
+\f2\b \cf7 int
+\f1\b0 \cf4  * tOffre_a, 
+\f2\b \cf7 int
+\f1\b0 \cf4  * tDemand_b, 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCoutVar, 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCoutFix )\
+\{\
+    \
+    
+\f2\b \cf7 int
+\f1\b0 \cf4  pos=\cf9 \cb3 0\cf4 \cb3 ;\
+    
+\f0\i \cf2 //on complete la construction des pointeurs d\'e9clar\'e9s dans le fichier d'entete
+\f1\i0 \cf4 \
+    
+\f0\i \cf2 /*for (int i = 0; i < m; ++i)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         tCoutFix[i] = new int[n];
+\f1\i0 \cf4 \
+
+\f0\i \cf2     
+\f1\i0 \cf4 \
+
+\f0\i \cf2     for (int i = 0; i < m; ++i)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         tCoutVar[i] = new int[n];*/
+\f1\i0 \cf4 \
+    \
+    \
+    
+\f0\i \cf2 //ouverture en lecture de monFichier( fichier encours de traitement declare ds sample.h
+\f1\i0 \cf4 \
+    ifstream file( monFichier, ios::in);\
+    
+\f2\b \cf7 if
+\f1\b0 \cf4  (file)\
+    \{\
+        \
+        string l_offre ; 
+\f0\i \cf2 //on va stocker ici la ligne ayant la quantit\'e9 d'offre de chaque sommet destination
+\f1\i0 \cf4 \
+        string  l_demand ; 
+\f0\i \cf2 //on va stocker ici la ligne ayant la quantit\'e9 de demande de chaque sommet destination
+\f1\i0 \cf4 \
+        string l_trash; 
+\f0\i \cf2 // on va utiliser ceci pour ecraser les lignes vides
+\f1\i0 \cf4 \
+        \
+        \
+        getline(file, l_trash);
+\f0\i \cf2 // on va ecraser la 1ere ligne car on a deja recuperer m
+\f1\i0 \cf4 \
+        getline(file, l_trash);
+\f0\i \cf2 // on va ecraser la 2 eme ligne car on a deja recuperer n
+\f1\i0 \cf4 \
+        getline(file, l_trash);
+\f0\i \cf2 // on va ecraser la 3eme ligne qui est vide
+\f1\i0 \cf4 \
+\
+\
+        \
+        
+\f0\i \cf2 // recuperons chaque offre et stockons dans le tableau d'offre pour chaque sommet
+\f1\i0 \cf4 \
+        \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4 (
+\f2\b \cf7 int
+\f1\b0 \cf4  i=\cf9 \cb3 0\cf4 \cb3 ; i<n ; i++)\
+        \{\
+           \
+            getline(file, l_offre);\
+            *(tOffre_a +i) = uploadData(l_offre, pos,  pos);\
+             pos= \cf9 \cb3 0\cf4 \cb3 ;\
+        \}\
+        \
+        getline(file, l_trash);
+\f0\i \cf2 // suppression d'une ligne vide
+\f1\i0 \cf4 \
+\
+        \
+        
+\f0\i \cf2 // recuperons chaque demande et stockons dans le tableau de demande pour chaque sommet
+\f1\i0 \cf4 \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4 (
+\f2\b \cf7 int
+\f1\b0 \cf4  i=\cf9 \cb3 0\cf4 \cb3 ; i<n ; i++)\
+        \{\
+           \
+            getline(file, l_demand);\
+            *( tDemand_b + i) = uploadData(l_demand, pos,  pos);\
+             pos= \cf9 \cb3 0\cf4 \cb3 ;\
+        \}\
+        \
+        getline(file, l_trash);
+\f0\i \cf2 // suppression d'une ligne vide
+\f1\i0 \cf4 \
+\
+         
+\f2\b \cf7 int
+\f1\b0 \cf4  a, b;\
+        
+\f0\i \cf2 //on va maintenant lire les co\'fbtss fixes et stocker dans un tableau
+\f1\i0 \cf4 \
+        
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i=\cf9 \cb3 0\cf4 \cb3 ; i<m*n ; i++ )\
+        \{\
+           
+\f2\b \cf7 int
+\f1\b0 \cf4  pos =\cf9 \cb3 0\cf4 \cb3 ;\
+            string lineC; 
+\f0\i \cf2 //lire successivement les lignes contenant les couts fixes et variables, recuperer les do\'e9es et stocker
+\f1\i0 \cf4 \
+            getline(file, lineC);\
+            a = uploadData(lineC, \cf9 \cb3 0\cf4 \cb3 , pos);\
+            b = uploadData(lineC, pos, pos);\
+            *(*(tCoutVar + a) +b)= uploadData(lineC, pos, pos);\
+            *(*(tCoutFix + a) +b ) = uploadData(lineC, pos,  pos);\
+        \}\
+        \
+        getline(file, l_trash);\
+        \
+        file.close();\
+        \
+    \}\
+    
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+        cout<<\cf6 "impossible de lire le fichier ! "\cf4 << endl;\
+    \
+\}\
+\
+\
+
+\f2\b \cf7 void
+\f1\b0 \cf4  BuiltCapacity(
+\f2\b \cf7 int
+\f1\b0 \cf4  m ,
+\f2\b \cf7 int
+\f1\b0 \cf4  n, 
+\f2\b \cf7 int
+\f1\b0 \cf4  tOffre[], 
+\f2\b \cf7 int
+\f1\b0 \cf4  tDemand[], 
+\f2\b \cf7 int
+\f1\b0 \cf4  ** tCapacity)\
+\{\
+    
+\f0\i \cf2 //onn termine la construction du pointeur d\'e9clar\'e9 dans sample.h
+\f1\i0 \cf4 \
+  
+\f0\i \cf2 /*  for (int i = 0; i < m; ++i)
+\f1\i0 \cf4 \
+
+\f0\i \cf2         tCapacityFix[i] = new int[n];*/
+\f1\i0 \cf4 \
+    \
+    
+\f2\b \cf7 for
+\f1\b0 \cf4  (
+\f2\b \cf7 int
+\f1\b0 \cf4  i=\cf9 \cb3 0\cf4 \cb3  ; i<m; i++)\
+    \{\
+        
+\f2\b \cf7 for
+\f1\b0 \cf4 (
+\f2\b \cf7 int
+\f1\b0 \cf4  j=\cf9 \cb3 0\cf4 \cb3 ; j<n; j++)\
+        \{ 
+\f2\b \cf7 if
+\f1\b0 \cf4  (tOffre[i] <= tDemand[j])\
+                tCapacity[i][j]=tOffre[i];\
+            
+\f2\b \cf7 else
+\f1\b0 \cf4 \
+                  tCapacity[i][j]=tDemand[j];\
+    \}\
+    \}\
+    \
+    \
+    \
+\}\
+\
+}

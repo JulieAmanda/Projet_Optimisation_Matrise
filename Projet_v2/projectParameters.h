@@ -6,6 +6,9 @@
 //  Copyright © 2020 JULIE AMANDA TCHOUANDEM KEMOE. All rights reserved.
 //
 
+
+//dans ce fichier, on définit tous les paramètres neccessaires pour extraire le modèle et les données( nom du fichier ayant les data, numro du groupe auquel appartient le fichier,  et les passer au solveur cplex
+
 #ifndef projectParameters_h
 #define projectParameters_h
 #include <string>
@@ -19,14 +22,14 @@ using namespace std;
 //const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 2 - Theta0.0/1.txt";
 
 //THETA = 0.2  B=50
-const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 9 - B50 Theta0.2/30x30/2.dat" ;
+//const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 9 - B50 Theta0.2/30x30/2.dat" ;
 
-//const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 2 - Theta0.0/2.txt";
+const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/toy1.txt";
 
 
 // on a deux graoupes d echantillons et la disposition des fichiers est differente dans chacun
 // on veut preciser le groupe pour mieux gerer la lecture des données dans les fichiers
-const int datasetGroup = 3;
+const int datasetGroup = 2;
 
 //le param nu pour la décomposition lagrangienne
 const float nu= 0.5;
@@ -35,9 +38,9 @@ const float nu= 0.5;
 const int IV_suppl = 1;
 
 //on va determiner si on utilise benders ou pas // 0 si on utilise pas Benders 1 si Oui
-//const int useBenders = 1;
+const int useBenders = 0;
 
-//#include <stdio.h>
+
 
 #endif /* projectParameters_h */
 
