@@ -20,10 +20,10 @@ IterationDetails::IterationDetails(int m, int n){
     this->lambda=1; // paramètre utilisé dans la formule de calcul du pas
     
     //on initialise les valeurs des objectifs à 0, les vals seront mises à jour au fil de l'exécution des ssPbs
-   /* for (int i=0; i<m; i++)
-        ValObjSrc[i]=0;
-    for (int j=0; j<n; j++)
-        ValObjDest[j]=0;*/
+    /* for (int i=0; i<m; i++)
+     ValObjSrc[i]=0;
+     for (int j=0; j<n; j++)
+     ValObjDest[j]=0;*/
     
     this->valObjDest= new float[n];
     this->valObjSrc = new float[m];
@@ -31,18 +31,18 @@ IterationDetails::IterationDetails(int m, int n){
     this->tX_ij = new int*[m];//ici on va stocker les valeurs des flots des noeuds sources
     for (int i = 0; i < m; ++i)
         this->tX_ij[i] = new int[n];
-
+    
     this->tW_ij= new int* [n];  //ici on va stocker les valeurs des flots des noeuds destinations
     for (int j = 0; j < n; ++j)
         this->tW_ij[j] = new int[m];
-
+    
     this->tSubGrad= new int* [n];  //table qui va contenir les sous-gradient après resolution des sspb
     for (int j = 0; j < n; ++j)
         this->tSubGrad[j] = new int[m];
-
+    
     this->multiplyers= new float* [n];  //table qui va contenir les sous-gradient après resolution des sspb
     for (int j = 0; j < n; ++j)
-    this->multiplyers[j] = new float[m];
+        this->multiplyers[j] = new float[m];
     
     
     
@@ -77,7 +77,7 @@ void IterationDetails::calculBorneMin(int m, int n ){
         this->bMin += this->valObjDest[j];
         cout << this->valObjDest[j] <<"  ";// affichage des solution coté destination
     }
-  
+    
 }
 
 
@@ -85,16 +85,7 @@ void IterationDetails::calculBorneMin(int m, int n ){
 
 void IterationDetails::calcul_subGradient ( int m, int n){
     
-    //    commencons par transposer la matrice des x_ijˆd afin de pouvoir comparer si les solutions sont égales pourdes i,j égaux des 2 cotés sources et destinations. la différence nous permettra d'obtenir le sous grandient plus tard
-    
-    // on va créer un nouveau tableau transposé pour y retranscrire les données.
-    int ** tVal_NdDest2 = new int* [m];
-    for (int i=0; i<m; i++)
-        tVal_NdDest2[i]= new int [n];
-    //construisons la transposée
-    for (int i=0; i<m; i++){
-        for (int j=0; j<n; j++)
-            tVal_NdDest2[i][j] = this->tW_ij[i][j];}
+   
     
     //calculons les ss-grad
     for (int i=0; i<m; i++){
@@ -102,9 +93,7 @@ void IterationDetails::calcul_subGradient ( int m, int n){
             this->tSubGrad [i][j]= this->tW_ij[i][j] - this->tX_ij[i][j];
     }
     
-    for (int i = 0; i < m; ++i)
-        delete [] tVal_NdDest2[i];
-    delete [] tVal_NdDest2;
+   
     
 }
 
@@ -119,10 +108,10 @@ void IterationDetails::calculPAs( int m, int n, float bInf_ItPrec ){
         for (int j=0; j< n; j++)
             norm += pow(this->tSubGrad[i][j],2);
     }
-   
+    
     this->pas= (this->lambda *( this->bMax - bInf_ItPrec))/norm;
     cout<<endl;
-    cout<< "la borne max est"<< this->bMax<< "la borne min est"<<this->bMin<< "la norm est"<< norm << endl;
+    cout<< "la borne max est "<< this->bMax<< " la borne min est "<<this->bMin<< " la norm est "<< norm << endl;
     
 }
 
@@ -131,23 +120,13 @@ void IterationDetails::calculPAs( int m, int n, float bInf_ItPrec ){
 
 // --------
 
+
 void IterationDetails::calculMultipliyers_t(int m, int n,  float ** tMultiplyers_prec  ){
     
-   
-    int j=0;
-    int go=n-1;
-    while(j<n-1 ) {
-        for (int i=0; i<go ; i++)
+    
+    for (int i=0; i<m; i++){
+        for (int j=0; j< n; j++)
             this->multiplyers[i][j]=tMultiplyers_prec[i][j] + (this->pas * (this->tSubGrad[i][j]));
-        go --;
-        j ++;
-    }
-    int count=0;
-    for(int i=m-1; i==0; i--){
-        for (int j=count; j<n; j++){
-            this->multiplyers[i][j]=tMultiplyers_prec[i][j] - (this->pas * (this->tSubGrad[i][j]));
-        }
-        count +=1;
     }
     
 }
@@ -157,10 +136,23 @@ void IterationDetails::calculMultipliyers_t(int m, int n,  float ** tMultiplyers
 
 /*
  
- for (int i=0; i<m; i++){
- for (int j=0; j< n; j++)
+ 
+ int j=0;
+ int go=n-1;
+ while(j<n-1 ) {
+ for (int i=0; i<go ; i++)
+ this->multiplyers[i][j]=tMultiplyers_prec[i][j] + (this->pas * (this->tSubGrad[i][j]));
+ go --;
+ j ++;
+ }
+ int count=0;
+ for(int i=m-1; i==0; i--){
+ for (int j=count; j<n; j++){
  this->multiplyers[i][j]=tMultiplyers_prec[i][j] - (this->pas * (this->tSubGrad[i][j]));
  }
+ count +=1;
+ }
+ 
  
  
  */
@@ -188,7 +180,7 @@ void IterationDetails::updateInstance(int m, int n,  IterationDetails Instance){
         this->valObjDest=Instance.valObjDest;
     for (int j=0; j< n; j++)
         this->valObjSrc=Instance.valObjSrc;
-        
+    
     
     
 }
@@ -213,8 +205,9 @@ void IterationDetails::freeIterationDetails(int m, int n){
     
     delete [] this->valObjDest;
     delete [] this->valObjSrc;
-
     
-
+    
+    
     
 }
+

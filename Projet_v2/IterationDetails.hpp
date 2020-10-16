@@ -40,7 +40,8 @@ class  IterationDetails {
     // calcul des multiplicateurs de lagrange à l'itération t
     // on lui donne la table des multiplicateurs à l'étape précédente Multiplyers_t_1
     //tabSugradient : tableau des sous-gradients à l'itération courante
-    // T_alpha est la table des multiplicateurs de lagrange
+    // t_multiplyers_prec est la table des multiplicateurs de lagrange à l'itération précédente
+    
 
     
     

@@ -13,6 +13,9 @@
 #include <string.h>
 ILOSTLBEGIN
 
+//chaque sous-problème s'obtient par décomposition du problème maître par noeud source et destination. On procède d'abord à une décomposition lagrangienne du modèle en séparant les flots x_ij en deux suivant la source(x_ijˆs =X-ij) et la destination (x_ijˆd=W_ij) telque x_ijˆs=x_ijˆd
+
+
 
 //temps cpu max = 1h30 (en secondes)
 //cplex.setParam(IloCplex::TiLim, 9000);
@@ -21,7 +24,7 @@ ILOSTLBEGIN
 //if (useBenders==1)
 //cplex.setParam(IloCplex::Param::Benders::Strategy, 3);
 
-void ssPbSrc_i( int numSrc, float * LgrgeMultpipl_i, float nu, int * ValX_ij, int Offre_i,
+void ssPbSrc_i( int numSrc, float * LgrgeMultpipl_i, float nu, int * ValX_i, int Offre_i,
                int * val_U_ij, int * val_C_ij, int * val_F_ij, int n, float & valObj){
     
 
@@ -123,7 +126,7 @@ cplex.setParam(IloCplex::Param::Threads, 1);
     
     
         for (int j=0; j<n; j++){
-            ValX_ij[j] = cplex.getValue(x_i[j]);
+            ValX_i[j] = cplex.getValue(x_i[j]);
              cout << cplex.getValue(x_i[j]) << "  " ;
         }
     
@@ -143,7 +146,7 @@ cplex.setParam(IloCplex::Param::Threads, 1);
 //la fonction du sous pb du coté destination
 
 
-void ssPbDest_j( int numDest, float * LgrgeMultpipl_j, float nu, int * ValW_ij, int Demand_j,
+void ssPbDest_j( int numDest, float * LgrgeMultpipl_j, float nu, int * ValW_j, int Demand_j,
                 int * val_U_ij, int * val_C_ij, int * val_F_ij, int m, float & valObj)
     {
         
@@ -187,10 +190,10 @@ void ssPbDest_j( int numDest, float * LgrgeMultpipl_j, float nu, int * ValW_ij, 
         
         
         // *** definissons les variables
-        IloNumVarArray  w_i (env, m, 0.0, IloInfinity, ILOINT); // du coté destination x_ijˆd=w_ij
+        IloNumVarArray  w_j (env, m, 0.0, IloInfinity, ILOINT); // du coté destination x_ijˆd=w_ij
         
         
-        IloNumVarArray z_i (env, m, 0, 1, ILOINT); //du coté destination y_ijˆd=z_ij
+        IloNumVarArray z_j (env, m, 0, 1, ILOINT); //du coté destination y_ijˆd=z_ij
         
         
         
@@ -198,7 +201,7 @@ void ssPbDest_j( int numDest, float * LgrgeMultpipl_j, float nu, int * ValW_ij, 
         
         
         IloExpr obj(env);
-        obj=(1-nu) * (IloScalProd(C_ij, w_i) + IloScalProd(F_ij, z_i)) + IloScalProd(tLgrgeMultpipl_j, w_i);
+        obj=(1-nu) * (IloScalProd(C_ij, w_j) + IloScalProd(F_ij, z_j)) + IloScalProd(tLgrgeMultpipl_j, w_j);
         
        // cout << IloScalProd(C_ij, w_i) + IloScalProd(F_ij, z_i) << endl;
         IloObjective objectif (env, obj, IloObjective::Minimize, "OBJ");
@@ -208,11 +211,11 @@ void ssPbDest_j( int numDest, float * LgrgeMultpipl_j, float nu, int * ValW_ij, 
         // *** definissons à présent les contraintes
         
         //( sum(x_ij , j in N)= demand_j
-        mod.add(IloSum(w_i)==Demand_j);
+        mod.add(IloSum(w_j)==Demand_j);
         
         //x_ij < u_ij*y_ij
-        for (int j =0; j<m ; j++)
-            mod.add(w_i[j] <= U_ij[j] *z_i[j]);
+        for (int i =0; i<m ; i++)
+            mod.add(w_j[i] <= U_ij[i] *z_j[i]);
         
         
         
@@ -221,7 +224,7 @@ void ssPbDest_j( int numDest, float * LgrgeMultpipl_j, float nu, int * ValW_ij, 
         if (IV_suppl==1) // si on a choisi d'ajouter les contraintes suppl au modèle
         {
             //( sum(y_ij*u_ij , i in M) >= offfre_i
-            mod.add(IloScalProd(U_ij, z_i)>= Demand_j);
+            mod.add(IloScalProd(U_ij, z_j)>= Demand_j);
             
         }
         
@@ -243,15 +246,15 @@ void ssPbDest_j( int numDest, float * LgrgeMultpipl_j, float nu, int * ValW_ij, 
         
         valObj= cplex.getObjValue();
          cout << endl <<" valeur de l'objectif = " << valObj << endl;
-        for (int j=0; j<m; j++){
-            ValW_ij[j] = cplex.getValue(w_i[j]);
-            cout << cplex.getValue(w_i[j]) << "  " ;
+        for (int i=0; i<m; i++){
+            ValW_j[i] = cplex.getValue(w_j[i]);
+            cout << cplex.getValue(w_j[i]) << "  " ;
         }
         
         cout << endl;
-        for (int j=0; j<m; j++){
+        for (int i=0; i<m; i++){
             //ValW_ij[j] = cplex.getValue(w_i[j]);
-            cout << cplex.getValue(z_i[j]) << "  " ;
+            cout << cplex.getValue(z_j[i]) << "  " ;
         }
         
    

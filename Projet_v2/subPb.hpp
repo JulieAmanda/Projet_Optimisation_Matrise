@@ -6,7 +6,8 @@
 //  Copyright © 2020 JULIE AMANDA TCHOUANDEM KEMOE. All rights reserved.
 //
 
-// on va définir ici l'implémentation des sous pbs qui seront utilisés dans l'algorithme du sous -gradient
+// on va définir ici l'implémentation des sous pbs qui seront utilisés dans l'algorithme du sous -gradient.
+//à chaque itération de l'algorithme du sous-gradient, on va résoudre un sous problème pour chaque nœuds( coté source puis coté destination) on sait que, suivant la forme des objectifs des sous-problèmes, la somme de toutes les valeurs des sous-problèmes (subpb) correspond à une borne inférieure de l'optimum à une itération donnée. Ainsi on va procéder à chaque itération, on va procéder à la résolution de tous les sous-pb et l'addition des valeurs des objectifs pour obtenir une borne inférieure (bMin)
 
 
 #ifndef subPb_hpp
@@ -18,7 +19,7 @@
 //ici on va noter x_ijˆs = x_ij
 //et x_ijˆd= w_ij
 
-void ssPbSrc_i( int numSrc, float * LgrgeMultpipl_i, float nu, int * ValX_ij, int Offre_i,
+void ssPbSrc_i( int numSrc, float * LgrgeMultpipl_i, float nu, int * ValX_i, int Offre_i,
                int * val_U_ij, int * val_C_ij, int * val_F_ij, int n, float  & valObj);
 
 /* numsrc : indice du noeud qu'on est entrain de traiter
@@ -33,7 +34,7 @@ void ssPbSrc_i( int numSrc, float * LgrgeMultpipl_i, float nu, int * ValX_ij, in
  valObj : est la valeur de l'objectif pour le sous problème correspondant à ce noeud là
  */
 
-void ssPbDest_j(int numDest, float * LgrgeMultpipl_j,  float nu, int * ValW_ij, int Demand_j,
+void ssPbDest_j(int numDest, float * LgrgeMultpipl_j,  float nu, int * ValW_j, int Demand_j,
                 int * val_U_ij, int * val_C_ij, int * val_F_ij, int m ,float & valObj);
 
 

@@ -31,7 +31,7 @@ void affichTabSolutions ( int m, int n , int ** tab);
 
 
 // foction qui nous permettra de verifier le changement de la borne inférieure aucours de nb itérations successives.
-bool lowerBndVariation(int nbIterationsMax, bool & updateStatus, float previouslowerBnd, float lowerBound, int count);
+bool lowerBndVariation(int nbIterationsMax, bool & updateStatus,  float & optimal_lwrBnd , int & count);
 //nbItérations c'est le nombre d'itérations max pour lequel on surveille s'il y a un changement
 // update statut nous permet de savoir s'il y a eu changement à date ou pas
 // previouslowerBnd est la valeur de la borne inf à la précedente itération

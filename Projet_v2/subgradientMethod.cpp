@@ -27,19 +27,23 @@ void affichTabSolutions ( int m, int n , int ** tab){
 
 
 // foction qui nous permettra de verifier le changement de la borne inférieure aucours de nb itérations successives.
-bool lowerBndVariation(int nbIterationsMax, bool & valueUpdated, float previousloweBnd, float lowerBound, int count){
+bool lowerBndVariation(int nbIterationsMax, bool & valueUpdated, float & optimal_lwrBnd, float lowerBound, int & count){
     
     float stopVerify = false; // permet de savoir si on a atteind le nombre max d itérations ou pas
     
-    if ( previousloweBnd==lowerBound){ // s'il y a égalité on va incrementer le nombre marquant  les successifs identiques
-        count +=1;
+    if ( optimal_lwrBnd>=lowerBound){ // si il n'y a pas eu amélioration de la borne optimale
+        count +=1;   //on compte une itération de plus sans amélioration
         }
-    else {
-        valueUpdated=true;
+    else {//si on obtient une meilleur borne inférieur
+        optimal_lwrBnd=lowerBound;   //on met à jour la valeur de la meilleur borne inférieur
+        valueUpdated=true;             //on enregistre qu'il y a eu amélioration
+        count=0;                    // on reinitialise le décompte
         }
     
     if (count == nbIterationsMax) //si on a atteint le nombre max à vérifier on arrête
-        stopVerify=true;
+    { stopVerify=true;              //on arrete de surveiller l'amélioration
+        count=0;                   //on recommence de surveiller l'amélioration à 0
+    }
     
     // dans l'algo principal, si le valueUpdated sont true alors on va recommencer le count. si le stopVerfy est true faire les controles que cela implique pour la suite de l'algo de sous gradient
     return stopVerify;
@@ -63,6 +67,10 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     int count_a = 0;
     int count_b = 0; // ce seront les compteurs pour verifier le nb d'iterations successives
     
+    float meilleur_bInf_a = 0;//meilleur b_Min enregistré sur un interval de a iterations
+    float meilleur_bInf_b = 0;//meilleur b_Min enregistré sur un interval de b iterations
+
+    
     int iteratnNumber =0;
     
     
@@ -73,6 +81,7 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     
     //on initialise les données de ;'algo à 0 pour l'iteration 1
     IterationDetails I_prec(m, n);
+   
     
     
     //tant qu'on a pas atteint le nbre max d'iteration et que stopverify_b_it = false( la valeur optimale ne s'est pas encore repete b= omga_3 fois) on continue l'algo
@@ -117,6 +126,8 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
         int t2 [m];
         int t3 [m];
         
+        
+        
         for (int j=0; j<n; j++){
             
             // etant donné que pour le souspb du coté destination à un noeud j on a besoin de tableau contenant les capacité, couts fixes et variables à partir du noeud j, on va construire les tableaux contenant ces données à partir des matrices tcapacity, tcoutFix et tCoutVar
@@ -139,9 +150,15 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
                 tAlpha_j[i]=I_prec.multiplyers[i][j];
             //on prend les multiplicateurs de la destination j
             
+            int * tab= new int[m]; //on va stocker ici nos valeurs des variables w_j[i] i de 1 à m de façon temporaire
+            
             //à présent on fait appel au ss_pb coté Dest
-            ssPbDest_j( j, tAlpha_j,  nu, I_cour.tW_ij[j], tDemand[j], t1 ,t2, t3,  m, valObj); // voir file subPb.cpp
+            ssPbDest_j( j, tAlpha_j,  nu, tab, tDemand[j], t1 ,t2, t3,  m, valObj); // voir file subPb.cpp
             I_cour.valObjDest[j]= valObj;
+            for (int i=0; i<m ;i++)
+                I_cour.tW_ij[i][j]=tab[i];
+            
+            delete [] tab;
             
             makeSpace(); // on fait de l'espace dans l'affichage ( voir mainfile_compliments.hpp)
         }
@@ -166,32 +183,24 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
         
         //on incremente le compteur d'iteration
         iteratnNumber = iteratnNumber + 1;
-        count_b += 1;
-        count_a += 1 ;
+       
         
         
         //on va maintenant faire le test de variation de la borne inférieure du problème
-        stopVerify_a_It=lowerBndVariation(omga_2, bMinUpdated_a_It, I_prec.bMin, I_cour.bMin, count_a);
-        stopVerify_b_It=lowerBndVariation(omga_3, bMinUpdated_b_It, I_prec.bMin, I_cour.bMin, count_b);
+        stopVerify_a_It=lowerBndVariation(omga_2, bMinUpdated_a_It, meilleur_bInf_a, I_cour.bMin, count_a);
+        stopVerify_b_It=lowerBndVariation(omga_3, bMinUpdated_b_It, meilleur_bInf_b, I_cour.bMin, count_b);
         
         //testons s'il y a eu des variations pour effectuer les controls neccessaires
         //après omga_2=15 iterations sans changement de bMin on met à jour lamba
         if (stopVerify_a_It==true){
             I_cour.lambda = I_prec.lambda/omga_1;
             stopVerify_a_It=false;
-            count_a = 0;
         }
         else{
             I_cour.lambda = I_prec.lambda;
         }
         
-        //si la borne min change au cours du decompte des iterations successives inchangées, on reinitialise les compteurs 
-        if (bMinUpdated_a_It==true) {
-            count_a=0;
-        }
-        if (bMinUpdated_b_It==true) {
-            count_b=0;
-        }
+        
         
         //on va calculer le pas et les multiplicateurs de lagrange etant donné qu'on a déjà tous les elements necessaires
     
@@ -268,6 +277,8 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     }
     
     cout << "le nombre d'iterations est :  " << iteratnNumber << endl;
+    cout << "la meilleure borne inf de 15 est  :  " << meilleur_bInf_a << endl;
+    cout << "la meilleure borne inf de 30 est  :  " << meilleur_bInf_b << endl;
     return I_prec;
     
 }
