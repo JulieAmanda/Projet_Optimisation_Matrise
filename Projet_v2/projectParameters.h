@@ -17,30 +17,36 @@ using namespace std;
 
 
 //on déclare le fichier à partir du quel on va extraire les echantillons
-const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 5 - B20 Theta0.0/50x50/1.dat" ;
+//const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 5 - B20 Theta0.0/50x50/1.dat" ;
 
+//const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 9 - B50 Theta0.2/30x30/1.dat" ;
 
-//const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 2 - Theta0.0/1.txt";
+const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 2 - Theta0.0/1.txt";
 
 //THETA = 0.2  B=50
 //const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 9 - B50 Theta0.2/30x30/2.dat" ;
 
 //const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/toy1.txt";
 
+//const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 3 - Theta0.2/2.txt";
+//const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 4 - Theta0.5/3.txt";
+
+
 
 // on a deux groupes(dossiers) d echantillons et le formatage des données dans les fichiers est different dans chacun des deux dossiers, il est donc important de preciser le numero du dossier ( 2<-> data set 2 ou 3 <-> data set 3) pour que le programme appelle la bonne methode de lecture de données
 
 // on veut preciser le groupe du dossier ( 2 ou 3) pour mieux gerer la lecture des données dans les fichiers
-const int datasetGroup = 3;
+const int datasetGroup = 2;
 
 //le param nu pour la methode de sous-gradient
 const float nu= 0.5;
 
 //on va utiliser une constante qui va definir si on ajoute(1) ou pas (0 <=> on va travailler juste sur le modèle de base) des IV au modèle
-const int IV_suppl = 1;
+const int IV_suppl = 1 ;
 
 //on va determiner si on utilise benders ou pas coe methode de resolution // 0 si on utilise pas Benders 1 si Oui
 const int useBenders = 0;
+
 
 
 

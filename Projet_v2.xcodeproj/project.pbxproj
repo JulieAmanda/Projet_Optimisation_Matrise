@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8D11401F2523CB3F00A3680C /* subgradientMethod.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8D11401D2523CB3E00A3680C /* subgradientMethod.cpp */; };
+		8DBC5C8925795C8A00F5C030 /* heuristiqBSup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DBC5C8725795C8A00F5C030 /* heuristiqBSup.cpp */; };
 		8DCC564A25128206007A0078 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DCC564925128206007A0078 /* main.cpp */; };
 		8DCC56582512A265007A0078 /* subPb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DCC56562512A265007A0078 /* subPb.cpp */; };
 		8DCC565B2512AF5B007A0078 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCC565A2512AF5B007A0078 /* CoreFoundation.framework */; };
@@ -18,6 +19,7 @@
 		8DCC566F2512B362007A0078 /* libilocplex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DCC56612512AFDF007A0078 /* libilocplex.a */; };
 		8DDC3E512522A3AB00BBEEB1 /* samples.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DDC3E4F2522A3AB00BBEEB1 /* samples.cpp */; };
 		8DDC3E5A2522A97D00BBEEB1 /* globalModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DDC3E582522A97D00BBEEB1 /* globalModel.cpp */; };
+		8DE3C79B257C58B900D86A70 /* SlotScaling.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DE3C799257C58B900D86A70 /* SlotScaling.cpp */; };
 		8DFBBE652526967300221811 /* IterationDetails.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8DFBBE632526967300221811 /* IterationDetails.cpp */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +39,8 @@
 		8D11401D2523CB3E00A3680C /* subgradientMethod.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = subgradientMethod.cpp; sourceTree = "<group>"; };
 		8D11401E2523CB3E00A3680C /* subgradientMethod.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = subgradientMethod.hpp; sourceTree = "<group>"; };
 		8D3DF40A252E6C2E0015CAEE /* IterationDetails.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IterationDetails.hpp; sourceTree = "<group>"; };
+		8DBC5C8725795C8A00F5C030 /* heuristiqBSup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = heuristiqBSup.cpp; sourceTree = "<group>"; };
+		8DBC5C8825795C8A00F5C030 /* heuristiqBSup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = heuristiqBSup.hpp; sourceTree = "<group>"; };
 		8DCC564625128206007A0078 /* Projet_v2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Projet_v2; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DCC564925128206007A0078 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8DCC5655251284AB007A0078 /* projectParameters.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = projectParameters.h; sourceTree = "<group>"; };
@@ -56,6 +60,9 @@
 		8DDC3E502522A3AB00BBEEB1 /* samples.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = samples.hpp; sourceTree = "<group>"; };
 		8DDC3E582522A97D00BBEEB1 /* globalModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = globalModel.cpp; sourceTree = "<group>"; };
 		8DDC3E592522A97D00BBEEB1 /* globalModel.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = globalModel.hpp; sourceTree = "<group>"; };
+		8DE3C799257C58B900D86A70 /* SlotScaling.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SlotScaling.cpp; sourceTree = "<group>"; };
+		8DE3C79A257C58B900D86A70 /* SlotScaling.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SlotScaling.hpp; sourceTree = "<group>"; };
+		8DF9EBA8257EF75500F66E5A /* globalVars.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = globalVars.h; sourceTree = "<group>"; };
 		8DFBBE632526967300221811 /* IterationDetails.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IterationDetails.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,6 +115,11 @@
 				8D11401E2523CB3E00A3680C /* subgradientMethod.hpp */,
 				8DFBBE632526967300221811 /* IterationDetails.cpp */,
 				8D3DF40A252E6C2E0015CAEE /* IterationDetails.hpp */,
+				8DBC5C8725795C8A00F5C030 /* heuristiqBSup.cpp */,
+				8DBC5C8825795C8A00F5C030 /* heuristiqBSup.hpp */,
+				8DE3C799257C58B900D86A70 /* SlotScaling.cpp */,
+				8DE3C79A257C58B900D86A70 /* SlotScaling.hpp */,
+				8DF9EBA8257EF75500F66E5A /* globalVars.h */,
 			);
 			path = Projet_v2;
 			sourceTree = "<group>";
@@ -242,7 +254,9 @@
 				8DDC3E5A2522A97D00BBEEB1 /* globalModel.cpp in Sources */,
 				8DDC3E512522A3AB00BBEEB1 /* samples.cpp in Sources */,
 				8DCC564A25128206007A0078 /* main.cpp in Sources */,
+				8DE3C79B257C58B900D86A70 /* SlotScaling.cpp in Sources */,
 				8DFBBE652526967300221811 /* IterationDetails.cpp in Sources */,
+				8DBC5C8925795C8A00F5C030 /* heuristiqBSup.cpp in Sources */,
 				8DCC56582512A265007A0078 /* subPb.cpp in Sources */,
 				8D11401F2523CB3F00A3680C /* subgradientMethod.cpp in Sources */,
 			);

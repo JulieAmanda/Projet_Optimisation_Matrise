@@ -11,35 +11,33 @@
 
 #include "globalModel.hpp"
 #include "projectParameters.h"
+#include "heuristiqBSup.hpp"
 //#include "samples.hpp"
 
 #include <ilcplex/ilocplex.h>
 #include <string.h>
 ILOSTLBEGIN
 
-float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity)
+float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool  ignore, int ** state)
 {
     IloEnv env;
     IloModel mod(env); //model
     IloCplex cplex(mod); // instance du solveur à utiliser.
     
-    //limitons le nombre de processeurs utilisés à 1
+    //limitons le nombre de processeurs
     cplex.setParam(IloCplex::Param::Threads, 1);
     
-    //BLOCKER L'AFFICHAGE DES DÉTails d'optimisation
-    cplex.setParam(IloCplex::Param::MIP::Display, 0);
+    //temps cpu max = 1h30 (en secondes)
+    //cplex.setParam(IloCplex::TiLim, 9000);
     
     //dire à cplex de s'arreter à la racine
-    cplex.setParam(IloCplex::Param::MIP::Limits::Nodes, 0);
+    cplex.setParam(IloCplex::Param::MIP::Limits::Nodes, 1);
     
     
-    //temps cpu max = 2h30 (en secondes)
-   // cplex.setParam(IloCplex::TiLim, 9000);
     //set de l'algorithme à utiliser pour la resolution
     //if (useBenders==1)
-       // cplex.setParam(IloCplex::Param::Benders::Strategy, 3);
+    // cplex.setParam(IloCplex::Param::Benders::Strategy, 3);
     
-   
     
     // *** on recopie le tableau tCoutVar en standard iloconcert. on le recupere en transposee
     //la transposée facilitera les calculs entre tableau pour les produits scalaires.
@@ -68,7 +66,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     IloArray<IloNumVarArray> x (env, m);//m ici est le nombre de sinks voir sample.h
     //chaque x[i] est un tableau de m variables reelles
     for(int i=0 ; i<m ; i++)
-        x[i] = IloNumVarArray(env, n, 0.0, IloInfinity, ILOFLOAT);
+        x[i] = IloNumVarArray(env, n, 0.0, IloInfinity, ILOINT);
     
     
     IloArray<IloNumVarArray> y (env, m);//m ici est le nombre de sinks voir sample.h
@@ -135,24 +133,55 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
         }
     }
     
+    /* on va faire la partie heuristique qui controle si on doit faire un calcul pour la mise à jour de la borne */
+    
+   // bool ignore= heuristique(tabDistAleatr, tSubGrad, tabX,  m,  n, historiqSol, state);
+    if( ignore==false){
+        int a, b;
+        int nb= n*m;
+        for (int i=1; i<nb ; i++) {
+            //ajouter if ( c'est different de -1)
+           
+            if (state[1][i] != -1){
+                a=state[0][i] / m;
+                b=state[0][i] % m;
+                mod.add(y[a][b] == state[1][i]);
+                
+            }
+        }
+    }
+    
     
     
     // ------------------ AFFICHAGE ET OPTIMISATION ----------------
     
+    // export du PL créé dans un fichier .lp
+    cplex.exportModel("/Users/julieamanda/Documents/WorkspaceMem/test.lp");
     // résolution
     cplex.solve();
-    
+    // export de la solution dans un fichier texte
+    cplex.writeSolution("/Users/julieamanda/Documents/WorkspaceMem/sol.txt");
     // récupère la solution et l'affiche à l'écran
     cout << endl <<" valeur de l'objectif = " << cplex.getObjValue() << endl;
     // cout << "algo utilisé"<< cplex.getAlgorithm() <<endl;
     
-    
-    // export du PL créé dans un fichier .lp
-    //cplex.exportModel("/Users/julieamanda/Documents/WorkspaceMem/test.lp");
-    
-    // export de la solution dans un fichier texte
-   // cplex.writeSolution("/Users/julieamanda/Documents/WorkspaceMem/sol.txt");
-    
+    /*    cout << endl<< "x= "<<endl;
+     for (int i=0; i< m; i++){
+     cout << endl;
+     for (int j=0; j<n; j++){
+     cout << cplex.getValue(x[i][j]) << "  " ;
+     
+     }}
+     
+     cout << endl<< "y = "<<endl;
+     for (int i=0; i< m; i++){
+     cout << endl;
+     for (int j=0; j<n; j++){
+     cout << cplex.getValue(y[i][j]) << "  ";
+     
+     }}
+     */
+   
     
    
     float res = cplex.getObjValue();

@@ -18,11 +18,18 @@
 using namespace std; 
 //paramètres à utiliser pour la méthode de sous-gradients
 
+//ELEMENTS POUR l'heuristique de mise à jour de la borne sup
 
-const int omga_2= 15;  //si la valeur de l'objectif ne change pas après ce nombre d'iteration on met à jour la valeur de lambda ds la formule du pas
-const int omga_3 = 30; // si la valeur de l'objectif ne change pas après ce nombre d'iteration on stop l'algo du sous -gradient
-const int omga_4 = 400; //nombre d'iteration maximal à ne pas dépasser
+//int * tRandomVector (
+//int * ModelBSup( int ** tMultiplicateurs, int ** tXij, )
+
+
+const int omga_2= 70;  //si la valeur de l'objectif ne change pas après ce nombre d'iteration on met à jour la valeur de lambda ds la formule du pas
+const int omga_3 = 100; // si la valeur de l'objectif ne change pas après ce nombre d'iteration on stop l'algo du sous -gradient
+const int omga_4 = 1000; //nombre d'iteration maximal à ne pas dépasser
 const int omga_1 = 2;   // les oméga st des paramètres utilisés aucours du contrôl des itérations
+
+const int callHrstq = 20 ; // nombre d'itérations après lequel on fait appel à l'heuristiq
 
 
 
@@ -39,7 +46,7 @@ bool lowerBndVariation(int nbIterationsMax, bool & updateStatus,  float & optima
 // count permet de savoir à combien de valeurs consécutives égales l'on est rendu
 
 
-IterationDetails Subgradient( int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity);
+IterationDetails Subgradient( int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int * tabDistAleatr);
 //tabSgrad_t_1 : table of the subgradients at the previous iteration
 //iteration : the current iteration
 
