@@ -55,7 +55,7 @@ bool lowerBndVariation(int nbIterationsMax, bool & valueUpdated, float & optimal
 
 //---------- implémentation de l'algorithme du sous-gradient --------//
 
-IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, int * tabDistAleatr ){
+IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, int * tabDistAleatr , int & nbItSS, int *** tabBestSol){
     
     
     // on crée deux var booléenes nous permettrons de verifier si la borne min change au fil de a ( repectivement b) itérations
@@ -78,17 +78,30 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     
     //on va fixer les multiplicateurs de lagrange à 0 pour la première iteration à 0 pour un début
    
-    //fixons nu
+    //initialisons nu (utilisée dans la formule de calcul des multiplcateurs de lagrange)
     float nu=0.5;
     
-    //on initialise les données de ;'algo à 0 pour l'iteration 1
+    //on initialise les données de ;l'algo de sous-gradient à 0 pour l'iteration 1 en créant une nouvelle instance d'itération
     IterationDetails I_prec(m, n);
     
     
-/*---  initialisation des éléments pour l'heuristique d'inercalage de la borne sup*/
+/*---  initialisation des éléments pour l'heuristique d'intercalage de la borne sup*/
     bool ignore =true ;
     
     int sizeTab= n*m; // la taille max de state et historiqSol sera le nombre d'iterations max divisé par le nbre d'itérations apres quoi on appelle l'heuristiqer
+    int nbCallHrstq = omga_3/callHrstq; //la taille max du tableau qui nous permettra de sauvegarder les bornes supérieures trouvées au cours de l'algo du sous-gradient chaque fois qu'on appelle l'heuristique lagrangienne.
+    
+    
+    //nous construisons la table qui nous permettra de sauvegarder les valeurs x_ij de la meilleure solution obtenue tout au long de l'algorithme.
+    int ** bestSol = new int * [m];
+    for (int i=0; i<m;i++)
+        bestSol[i]= new int [n];
+    
+    //on va à présent créer une table qui nous permettra d'enregistrer tout l'historique des valeurs des y_ij au cours des recherches de la meilleures borne supérieure. Pour chaque solution réalisable correspondant à une borneSup, on va enregistrer l'etat de chaque arc en sauvegardant les valeurs des y_ij. Cela nous permettra à la fin de constater les arcs qui sont toujours fermés ds ttes les solutions
+    int ** historiqY_ij = new int * [nbCallHrstq];
+    for (int i=0; i<nbCallHrstq;i++)
+        bestSol[i]= new int [sizeTab];
+    
     
     int ** state= new int* [2]; //on va stocker ici l'etat de la solution obtenue
     // 1 ligne pour la position à laquelle le sous-grad=0 et l'autre pour la valeur de yij à cette position
@@ -101,31 +114,32 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     
     
     for (int i=0; i<sizeTab; i++){
-        state[0][i]=4;
-        state[1][i]=4;
-        historiqSol[i]=4;
+        state[0][i]=0;
+        state[1][i]=-1; // ON INITIALISE TOUT À -1 car au début l'état de l'arc est libre on a pas encore fait de fixation sur yij on a donc yij=-1
+        //on aura state[i][j]=y_ij=1 si on fixe l'arc comme obligatoirement ouvert et ayant du flot et state[i][j]=y_ij=0 si on ferme l'arc pour l'obliger à ne pas faire passer du flot
+        historiqSol[i]=0;
      
     }
-//    cout<<"print state "<< endl;
-//    for (int i=0; i<sizeTab; i++)
-//        cout<<state[0][i]<< "   ";
-//    cout<<"print state 1 "<< endl;
-//    for (int i=0; i<sizeTab; i++)
-//        cout<<state[1][i]<< "   ";
-//
+
+    int countHrstq = 0; // va nous servir de compteur pour savoir à quel moment appeler l'heursitique lagrangienne pour la borne sup..il y a un appel toutes les 20 itération successives
     
-    int countHrstq = 0; // va nous servir de compteur pour savoir à quel moment appeler l'heursitique pour la borne sup
     
-    int ** tSolScaling = new int * [m]; // on va recueillirici les solutions de la procédure slot scaling
-    for (int i=0; i<m ;i++)
-        tSolScaling[i]=new int [n];
+    // on va recueillir ici les solutions de la procédure slope scaling
+    int ** tabSolScaling = new int * [m];
+    for (int i=0; i<m ;i++){
+        tabSolScaling[i]=new int [n];
+        for (int j=0; j<n; j++)
+            tabSolScaling[i][j]=0;
+    }
+
+    
     
     
     int  * tabBornsup = new int [sizeTab];
     
    /* ----       -------*/
     
-   
+   //on initialise la borne sup par la solution du problème global de base à la racine de CPLEX
   float BestBornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, ignore, state);
     historiqSol[1]= BestBornSup ; // on va garder cette premiere borne sup dans l'historique
     historiqSol[0]=1; // on met à jour la taille du tableau
@@ -140,18 +154,18 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
        
         /*  résolution des sous problèmes pour les noeuds sources */
 
-        float valObj =0;
+        float valObj =0; //variable temporaire dans laquelle on va recupérer la solution des sous-problèmes au fil des itérations.
         
         for (int i=0; i<m; i++){
             
-            //on va afficher les données utiles pour ce sous-Pb
+            //on va afficher les données utiles pour ce sous-Pb (pour améliorer la lecture des resultats)
             cout << endl;
             cout << "***  Noeud source : numéro " << i <<"   ***     "<<endl;
             
             //pour afficher les couts fixes/variables, capacité et demande lié au subpb
             //affich_subPbData(tOffre[i], tCapacity[i], tCoutVar[i], tCoutFix[i], m, n); //voir la fonction dans mainfile_compliments.hpp
             
-            //on va fixer la tables des multiplicateurs de lagrange à 0 pour un début
+            //o la tables des multiplicateurs de lagrange à 0 à la toute première itération
             float tAlpha_i [n];
             for (int j=0; j<n; j++)
                 tAlpha_i[j]=I_prec.multiplyers[i][j];
@@ -228,20 +242,42 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
         if (countHrstq == callHrstq){
             
         
-            ignore= heuristique(tabDistAleatr, I_cour.tW_ij, I_cour.tX_ij,  m,  n, historiqSol, state); // cette heuristique va nous permettre de se faire une idée du type de la solution ( les arcs ouverts/fermés/indéterminés en créant une clé unique correspondant à la solution.et nous renvoie un booleen qui indique false si cette solution n'avait pas encore ete trouvée
+            ignore= heuristique(tabDistAleatr, I_cour.tW_ij, I_cour.tX_ij,  m,  n, historiqSol, state); // cette heuristique va nous permettre de se faire une idée du type de la solution ( les arcs ouverts/fermés/libres. Aussi on va créer une clé unique correspondant à la solution. et nous renvoyer un booleen qui indique false si cette solution n'avait pas encore ete trouvée
             
            
             cout<<"go"<<endl;
-            if (ignore==false){ //si la clée trouvée par l'heuristique n'avait pas encore été trouvée passée
+            if (ignore==false){ //si la clée trouvée par l'heuristique n'avait pas encore été trouvée passée on va appliquer la procédure du slot scaling. Dans le cas contraire, il n'yaura pas de différence de résultat donc on va juste recommencer le décompte de 20 itérations pour essayer à nouveau de calculer une bSup
 
-                tSolScaling= slotScale(m, n,  tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, state); // on va appliquer une procédure de slotscaling pour relier les sources aux destinations et s'assurer que le nombre d'arcs ouvert et fermés nous permet d'avoir une solution réalisable.
-                updateTabState(tSolScaling, state, m, n); // on va ensuite mettre à jour la fermeture et l'ouverture des arcs en modifiant l'etat des arcs dans le tableau state
+                float bornsupSS;
                 
-               float bornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity,ignore, state);
-                    int a= historiqSol[0]-1;
-                    tabBornsup[a]=bornSup;
-                if (bornSup<BestBornSup)
-                    BestBornSup=bornSup;
+                //on execute la procédure de slope scaling intégrée à l'heuristique lagrangienne
+                slopeScaleMethod(m, n, tabSolScaling, bornsupSS,  tCoutFix, tCoutVar, tCapacity, tOffre, tDemand, state, nbItSS, tabBestSol);
+                cout<< "borne sup avec slope scale "<< bornsupSS;
+                cout << endl;
+                
+               
+                //on vcalcule la borne supérieure en resolvant le probleme global restreint par la fermeture des arcs dont state=0
+                float bornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity,ignore, state);
+
+                cout<<"borne sup évaluée d'après le modèle global est : "<< bornSup ;
+                cout << endl;
+
+                
+//                /**** calcul de la bsup après Slope scaling : stratégie T2  ****/
+                            int a= historiqSol[0]-1;
+                            tabBornsup[a]=bornSup;
+                             if (bornSup<BestBornSup)
+                             BestBornSup=bornSup;
+
+              
+                  /**** calcul de la bsup après Slope scaling : stratégie T1  ****/
+//                int a= historiqSol[0]-1;
+//                tabBornsup[a]=bornsupSS;
+//                if (bornsupSS<BestBornSup)
+//                    BestBornSup=bornsupSS;
+
+              
+                
             }
             countHrstq=0; //on reinitialise la borne sup
         }
@@ -355,6 +391,11 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     for (int i=0; i<historiqSol[0]; i++)
          cout<< tabBornsup[i] << "   " ;
     
+//    for (int i=0; i<m; i++)
+//        delete [] tabSolScaling[i];
+//    delete [] tabSolScaling;
+//
+//
     return I_prec;
     
 }

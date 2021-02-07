@@ -29,11 +29,11 @@ int uploadData( string line, int pos, int &posSuiv);
 
 void get_M_N(int &m, int &n); // on va extraire les valeurs de m et n des fichiers
 
-void readInput_Dataset2(  int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix );
+void readInput_Dataset2(  int &m, int &n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix );
 //cette fonction permet de recuperer les donnees d'un fichier appartenant au dataset2
 //et de les stocker dans des structures de données pour les utiliser
 
-void readInput_Dataset3( int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix );
+void readInput_Dataset3( int &m , int &n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix );
 //cette fonction permet de recuperer les donnees d'un fichier appartenant au dataset #
 //et de les stocker dans des structures de données pour les utiliser
 

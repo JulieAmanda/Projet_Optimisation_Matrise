@@ -17,7 +17,7 @@ IterationDetails::IterationDetails(int m, int n){
     this->bMin=0;
     this->bMax=100000;
     this->pas=0;
-    this->lambda=1; // paramètre utilisé dans la formule de calcul du pas
+    this->lambda=1.6; // paramètre utilisé dans la formule de calcul du pas
     
     //on initialise les valeurs des objectifs à 0, les vals seront mises à jour au fil de l'exécution des ssPbs
     /* for (int i=0; i<m; i++)
@@ -131,31 +131,7 @@ void IterationDetails::calculMultipliyers_t(int m, int n,  float ** tMultiplyers
     
 }
 
-// ----------
 
-
-/*
- 
- 
- int j=0;
- int go=n-1;
- while(j<n-1 ) {
- for (int i=0; i<go ; i++)
- this->multiplyers[i][j]=tMultiplyers_prec[i][j] + (this->pas * (this->tSubGrad[i][j]));
- go --;
- j ++;
- }
- int count=0;
- for(int i=m-1; i==0; i--){
- for (int j=count; j<n; j++){
- this->multiplyers[i][j]=tMultiplyers_prec[i][j] - (this->pas * (this->tSubGrad[i][j]));
- }
- count +=1;
- }
- 
- 
- 
- */
 
 
 //on va mettre à jour les valeurs de l'iteratin precédente par les solutions en cours pour passer à une autre iteration

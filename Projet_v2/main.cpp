@@ -30,15 +30,13 @@ int main(int argc, const char * argv[]) {
 
    //on a déclaré m et n comme variables globales dans globalVars du projet
     
-//    int m =  0;
-//    int  n = 0 ;
+    int m =  0;
+    int  n = 0 ;
     get_M_N(m, n); //on va recuperer les valeurs de m et n contenues dans le fichier(voir le fichier samples.cpp)
     
     cout<< m<< endl;
     cout <<n << endl;
-//    taille_m=m;
-//    taille_n=n;
-    
+   
     //on construit les structures de données dont on aura pour stocker les données
     int * tOffre = new int[m];
     int * tDemand = new int[n]; //on choisit de reserver 100
@@ -58,7 +56,7 @@ int main(int argc, const char * argv[]) {
     // on va lire toutes données dans le fichier selon le groupe auquel appartient le file
     // il existe 2 dossiers. et selon le dossier, la disposition des fichiers est differente
     if (datasetGroup==2)
-        readInput_Dataset2( tOffre, tDemand,tCoutVar, tCoutFix);// voir samples.cpp
+        readInput_Dataset2( m, n, tOffre, tDemand,tCoutVar, tCoutFix);// voir samples.cpp
     else if (datasetGroup==3)
         readInput_Dataset3(m, n, tOffre, tDemand,tCoutVar, tCoutFix);
     else
@@ -71,16 +69,15 @@ int main(int argc, const char * argv[]) {
    // int a=n*m;
     int * tRandom  = DistribAleatoire(n, m);
     
-//    int a = 11;
-//    int b=a/5;
-//    int c= a % 5;
     
-//    cout<< "les valeurs de a et b sont "<< b << "et" << c << endl;
+    //paramètre pour le slope scaling
+    const int countSlope = omga_4/callHrstq; //nombre max d'appel de slope Scaling possible
+    int * ** tabBestSol= new int ** [countSlope]; // tableau dans lequel on va classer les meilleures solutions de tous les appels de slope scaling
+    int  nbItSS=0; // pour compter le nombre d'appel de slope scaling(SS) qui a été fait
     
-    
-// -------
+
     //application de l'algorithme du sous gradient pour determiner la solution (voir le fichier subgradientMethod.cpp
-   Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom);
+   Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom,  nbItSS, tabBestSol);
     
 
     

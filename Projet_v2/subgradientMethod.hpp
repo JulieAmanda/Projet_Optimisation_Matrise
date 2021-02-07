@@ -29,7 +29,7 @@ const int omga_3 = 100; // si la valeur de l'objectif ne change pas après ce no
 const int omga_4 = 1000; //nombre d'iteration maximal à ne pas dépasser
 const int omga_1 = 2;   // les oméga st des paramètres utilisés aucours du contrôl des itérations
 
-const int callHrstq = 20 ; // nombre d'itérations après lequel on fait appel à l'heuristiq
+const int callHrstq = 20 ; // nombre d'itérations après lequel on fait appel à l'heuristiq LAgrangienne pour mettre à jour la borne sup
 
 
 
@@ -46,7 +46,7 @@ bool lowerBndVariation(int nbIterationsMax, bool & updateStatus,  float & optima
 // count permet de savoir à combien de valeurs consécutives égales l'on est rendu
 
 
-IterationDetails Subgradient( int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int * tabDistAleatr);
+IterationDetails Subgradient( int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int * tabDistAleatr, int & nbItSS, int *** tabBestSol);
 //tabSgrad_t_1 : table of the subgradients at the previous iteration
 //iteration : the current iteration
 

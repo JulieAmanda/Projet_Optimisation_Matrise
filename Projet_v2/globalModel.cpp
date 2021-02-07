@@ -41,7 +41,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     
     // *** on recopie le tableau tCoutVar en standard iloconcert. on le recupere en transposee
     //la transposée facilitera les calculs entre tableau pour les produits scalaires.
-    IloArray<IloIntArray> C_ij (env, n);
+    IloArray<IloIntArray> C_ij (env, m);
     for(int i=0 ; i<m ; i++)
     {
         C_ij[i]= IloIntArray(env, n);
@@ -135,7 +135,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     
     /* on va faire la partie heuristique qui controle si on doit faire un calcul pour la mise à jour de la borne */
     
-   // bool ignore= heuristique(tabDistAleatr, tSubGrad, tabX,  m,  n, historiqSol, state);
+    // bool ignore= heuristique(tabDistAleatr, tSubGrad, tabX,  m,  n, historiqSol, state); si ignore est true cela signifie que la cle obtenue a deja eté donc on aura pas besoin de cette partie car elle intervient juste pour le calcul de la borne sup après le slope scaling
     if( ignore==false){
         int a, b;
         int nb= n*m;
@@ -156,11 +156,9 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     // ------------------ AFFICHAGE ET OPTIMISATION ----------------
     
     // export du PL créé dans un fichier .lp
-    cplex.exportModel("/Users/julieamanda/Documents/WorkspaceMem/test.lp");
-    // résolution
+    
     cplex.solve();
-    // export de la solution dans un fichier texte
-    cplex.writeSolution("/Users/julieamanda/Documents/WorkspaceMem/sol.txt");
+
     // récupère la solution et l'affiche à l'écran
     cout << endl <<" valeur de l'objectif = " << cplex.getObjValue() << endl;
     // cout << "algo utilisé"<< cplex.getAlgorithm() <<endl;

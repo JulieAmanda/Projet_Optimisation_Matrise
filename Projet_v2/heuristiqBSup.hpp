@@ -19,9 +19,10 @@ int * DistribAleatoire(int n, int m);
 
 
 //dans cette fonction, on utilisera notre distribution aléatoire pour calculer une clé unique correspondante à la solution obtenue à une itération donnée ( la solution est identifiee par tSubgrad et tX). si la clé obtenue est identique à une clé présente dans l'historique, on suppose que cette solution a déja été traitée alors on va l'ignorer. aussi, on repertorie dans une table state la solution qui est évaluée.
-bool heuristique( int * tabDistAleatr, int ** tabW, int ** tabX, int m, int n , int * historiqSol, int ** state);
+bool heuristique( int * tabDistAleatr, int ** tabW, int ** tabX, int m, int n , int * historiqSol, int ** state );
 
-
+//C'est une fonction qui nous permet de mettre à jour l'etat des variables au fur et à mesure des appels du slope scaling
+//
 void updateTabState( int ** tabSolScaling, int **  state, int m, int n);
 
 #endif /* heuristiqBSup_hpp */

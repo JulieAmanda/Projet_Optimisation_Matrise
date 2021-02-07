@@ -9,14 +9,27 @@
 #ifndef SlotScaling_hpp
 #define SlotScaling_hpp
 
+
 #include <stdio.h>
 
 
-const int M=100 ;
-const int nbIterations = 15;
+const int M=50 ;
+const int nbScalingIterat = 10;
+const int Mpost=10000000; // cout des arcs à fermer pour la postoptimisation après le slot scaling
+
+
 
 //fonction qui implémente la procédure
 
-int ** slotScale(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, int ** state);
+int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,  int ** tSolution, int ** tabCost);
+
+void costUpdate ( int m, int n, int iterationNb, int ** state, int **tabSol,  int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int ** tabCost );
+
+//void slopeSolution(int ** tabSol, int ** tCoutFix, int ** tCoutVar, int m, int n, int Bornsup, int ** bestSol, int & bestVal);
+float slopeRealValue(int m, int n, int ** tabSol, int ** tCoutFix, int ** tCoutVar);
+
+void costPostOptim(int m, int n, int **tabSol,  int ** tCoutVar, int ** tabCost);
+
+void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int ** tCoutFix, int ** tCoutVar, int ** tCapacity, int * tOffre, int * tDemand, int ** state , int & nbItSS, int *** tabBestSol);
 
 #endif /* SlotScaling_hpp */
