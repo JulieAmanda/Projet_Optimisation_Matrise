@@ -18,7 +18,7 @@
 //ici, on a défini le modèle dans sa forme originale, on l'utilisera pour calculer une borne supérieure au problème. en précisant à cplex de s'arreter juste à trouver une solution réalisable à la racine
 
 
-float ModelBase_Bsup( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool ignore , int ** state, float bornSup, int ** bestSol, int ** historiqY_ij);
+float ModelBase_Bsup( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool ignore , int ** state, float bestBornSup, int ** bestSol, int ** historiqY_ij, int nbCallHrstq);
 
 
 #endif /* globalModel_hpp */

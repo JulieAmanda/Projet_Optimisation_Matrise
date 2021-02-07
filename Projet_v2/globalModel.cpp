@@ -18,7 +18,7 @@
 #include <string.h>
 ILOSTLBEGIN
 
-float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool  ignore, int ** state, float bornSup, int ** bestSol, int ** historiqY_ij)
+float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool  ignore, int ** state, float bestBornSup, int ** bestSol, int ** historiqY_ij, int nbCallHrstq)
 {
     IloEnv env;
     IloModel mod(env); //model
@@ -37,6 +37,8 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     //set de l'algorithme à utiliser pour la resolution
     //if (useBenders==1)
     // cplex.setParam(IloCplex::Param::Benders::Strategy, 3);
+    
+    
     
     
     // *** on recopie le tableau tCoutVar en standard iloconcert. on le recupere en transposee
@@ -136,12 +138,13 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     /* on va faire la partie heuristique qui controle si on doit faire un calcul pour la mise à jour de la borne */
     
     // bool ignore= heuristique(tabDistAleatr, tSubGrad, tabX,  m,  n, historiqSol, state); si ignore est true cela signifie que la cle obtenue a deja eté donc on aura pas besoin de cette partie car elle intervient juste pour le calcul de la borne sup après le slope scaling
+   
     if( ignore==false){
         int a, b;
         int nb= n*m;
-        for (int i=1; i<nb ; i++) {
+        for (int i=0; i<nb ; i++) {
             //ajouter if ( c'est different de -1)
-           
+            
             if (state[1][i] != -1){
                 a=state[0][i] / m;
                 b=state[0][i] % m;
@@ -181,8 +184,53 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
      */
    
     
+    //on ajoute les valeurs de y_ij suite à l'heuristiq lagrangienne dans l'historiqY_ij pour sauvegarder l'évolution de l'état des arcs
+   
+    if ( ignore==false){
+        int nb= n*m;
+        
+        for (int i=0; i< m; i++){
+            cout << endl;
+            for (int j=0; j<n; j++){
+                int pos=i*m+j;
+                historiqY_ij[nbCallHrstq][pos]=int(cplex.getValue(y[i][j]));
+                cout <<endl;
+                cout<< "le tableau se print bien example" << historiqY_ij[nbCallHrstq][10]<< endl;
+                cout<< endl;
+                
+            }
+        }
+    }
+//        for (int pos=0; pos<nb ; pos++){
+//            int i= pos/m;
+//            int j= pos % n;
+//            historiqY_ij[nbCallHrstq][pos]=int(cplex.getValue(y[i][j]));
+//            cout <<endl;
+//            cout<< "le tableau se print bien example" << historiqY_ij[nbCallHrstq][10]<< endl;
+//            cout<< endl;
+//
+//        }
+//    }
+//
    
     float res = cplex.getObjValue();
+    
+    //on verifie s'il faut une mise à jour de la borne sup
+    if( res>bestBornSup){
+        bestBornSup=res;
+        //on sauvegarde cette meilleure solution
+        for (int i=0; i< m; i++){
+            cout << endl;
+            for (int j=0; j<n; j++){
+                //cout << cplex.getValue(x[i][j]) << "  " ;
+                bestSol[i][j]=int(cplex.getValue(x[i][j]));
+            }
+        }
+        
+    
+    }
+    
+    
     env.end();
   
     

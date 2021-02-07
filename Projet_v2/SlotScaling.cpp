@@ -299,23 +299,23 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
     /*******    SS1  *******/
     //on arrete les itérations lorsqu'on trouve successivement deux solutions correspondant à la même solution réelle calculée qui est une borne sup. on travaille avec cette dernière solution
     
-//     while (next) {
-//
-//     valPrec=valSolSlope;
-//
-//     // faire le cost update ici
-//     costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
-//
-//
-//     valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost);//iteration 0
-//         valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
-//     if (valSolSlope == valPrec)
-//     next=false;
-//
-//     k++;
-//     }
-//    bornSup=valSolSlope;
-//     updateTabState(tabSolScaling, state, m, n);
+     while (next) {
+
+     valPrec=valSolSlope;
+
+     // faire le cost update ici
+     costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
+
+
+     valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost);//iteration 0
+         valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
+     if (valSolSlope == valPrec)
+     next=false;
+
+     k++;
+     }
+    bornSup=valSolSlope;
+     updateTabState(tabSolScaling, state, m, n);
 
      /******  fin SS1 ********/
     
@@ -324,23 +324,23 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
     /*******    SS2  *******/
     //on arrete les itérations lorsqu'on trouve deux meme valeurs de l' objectif successivement et on travaille avec la dernière solution
 
-    while (next) {
-
-        valPrec=valCour;
-
-       // faire le cost update ici
-        costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
-
-
-        valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost);//iteration 0
-         valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
-        if (valCour == valPrec)
-                 next=false;
-
-        k++;
-    }
-     bornSup=valSolSlope;
-    updateTabState(tabSolScaling, state, m, n);
+//    while (next) {
+//
+//        valPrec=valCour;
+//
+//       // faire le cost update ici
+//        costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
+//
+//
+//        valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost);//iteration 0
+//         valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
+//        if (valCour == valPrec)
+//                 next=false;
+//
+//        k++;
+//    }
+//     bornSup=valSolSlope;
+//    updateTabState(tabSolScaling, state, m, n);
 
   /******  fin SS2 ********/
     

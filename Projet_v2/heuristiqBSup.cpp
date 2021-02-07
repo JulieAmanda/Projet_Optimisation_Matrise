@@ -46,8 +46,7 @@ bool heuristique( int * tabDistAleatr, int ** tabW, int ** tabX, int m, int n , 
    // int ** state= new int * [2]; //on va stocker ici l'etat de la solution obtenue
     // 1 ligne pour la position à laquelle le sous-grad=0 et l'autre pour la valeur de yij à cette position
     
-//    state[0][0]=0;// on va reserver cette case pour stocquer le nombre Yij qui ont déjà été retenus pour être fixés
-//    state[1][0]=0 ;// on reserve la premiere case de la deuxieme ligne pour stocker la somme finale qui est la clé.
+
     
     
 //    int posState=0; // on va commencer à modifier le tableau sate à partir de la 2e colonne car la colonne 1 a déjà été reservée
