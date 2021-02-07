@@ -140,7 +140,8 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
    /* ----       -------*/
     
    //on initialise la borne sup par la solution du problème global de base à la racine de CPLEX
-  float BestBornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, ignore, state);
+    float BestBornSup = 1000000;
+  BestBornSup= ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, ignore, state,  BestBornSup, bestSol, historiqY_ij);//cette méthode permet de calculer une nouvelle solution réalisable du problème (P) (en considérant les informations de state et ignore. Si elle trouve une borne sup meilleure que la courante, elle va mettre à jour bestsol et bestbornsup et à chaque appel il met à jour historiqY_ij.
     historiqSol[1]= BestBornSup ; // on va garder cette premiere borne sup dans l'historique
     historiqSol[0]=1; // on met à jour la taille du tableau
     
@@ -254,20 +255,23 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
                 slopeScaleMethod(m, n, tabSolScaling, bornsupSS,  tCoutFix, tCoutVar, tCapacity, tOffre, tDemand, state, nbItSS, tabBestSol);
                 cout<< "borne sup avec slope scale "<< bornsupSS;
                 cout << endl;
+              
+                
+                /**** calcul de la bsup correspondante après Slope scaling : stratégie T2  ****/
                 
                
-                //on vcalcule la borne supérieure en resolvant le probleme global restreint par la fermeture des arcs dont state=0
-                float bornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity,ignore, state);
+                //avec la solution issue du slope scaling, on va calculer une nvelle  la borne supérieure en resolvant le probleme global restreint par la fermeture des arcs dont state=0
+                float bornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity,ignore, state,BestBornSup, bestSol, historiqY_ij);
 
                 cout<<"borne sup évaluée d'après le modèle global est : "<< bornSup ;
                 cout << endl;
 
                 
-//                /**** calcul de la bsup après Slope scaling : stratégie T2  ****/
+//on va repertotier l'ensemble des bornes sup obtenues tout au long
                             int a= historiqSol[0]-1;
                             tabBornsup[a]=bornSup;
-                             if (bornSup<BestBornSup)
-                             BestBornSup=bornSup;
+//                             if (bornSup<BestBornSup)
+//                             BestBornSup=bornSup;
 
               
                   /**** calcul de la bsup après Slope scaling : stratégie T1  ****/

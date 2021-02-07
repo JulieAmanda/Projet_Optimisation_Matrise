@@ -18,7 +18,7 @@
 #include <string.h>
 ILOSTLBEGIN
 
-float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool  ignore, int ** state)
+float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool  ignore, int ** state, float bornSup, int ** bestSol, int ** historiqY_ij)
 {
     IloEnv env;
     IloModel mod(env); //model
