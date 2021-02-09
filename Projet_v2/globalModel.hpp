@@ -16,10 +16,10 @@
 #include <stdio.h>
 
 //ici, on a défini le modèle dans sa forme originale, on l'utilisera pour calculer une borne supérieure au problème. en précisant à cplex de s'arreter juste à trouver une solution réalisable à la racine
-float ModelBase_Bsup( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool ignore , int ** state, float bestBornSup, int ** bestSol, int ** historiqY_ij, int nbCallHrstq);
+float ModelBase_Bsup( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool ignore , int ** state, float bestBornSup, int ** tabBestSol, int ** historiqY_ij, int nbCallHrstq);
 
 //à la toute fin de notre processus de résolution, on va appliquer à nouveau une post optimisation, on va résoudre le problème global de base par cplex en lui précisant la meilleure solution existante ainsi que un ensemble d'arcs à fermer
-float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool ignore , int ** state, float bestBornSup, int ** bestSol, int ** historiqY_ij);
+float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, float bestBornSup, int ** tabBestSol, int ** historiqY_ij,  int nbCallHrstq);
 
 
 //cette fonction nous permettra d'extraire les arcs qui sont généralement fermés parmis toutes les solutions réslisable que nous avons trouvées avec l'heuristique lagrangienne, afin d'en extraire les arcs fermés à passer à cplex pour la dernière postoptimisation passer 

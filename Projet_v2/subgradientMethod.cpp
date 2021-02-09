@@ -55,7 +55,7 @@ bool lowerBndVariation(int nbIterationsMax, bool & valueUpdated, float & optimal
 
 //---------- implémentation de l'algorithme du sous-gradient --------//
 
-IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, int * tabDistAleatr ,  int ** tabBestSol, int ** historiqY_ij, int & nbCallHrstq){
+IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, int * tabDistAleatr ,  int ** tabBestSol, float & bestSolValue, int ** historiqY_ij, int & nbCallHrstq){
     
     
     // on crée deux var booléenes nous permettrons de verifier si la borne min change au fil de a ( repectivement b) itérations
@@ -382,9 +382,14 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
         
     }
     
+    
+    
     cout << "le nombre d'iterations est :  " << iteratnNumber << endl;
     cout << "la meilleure borne inf de 15 est  :  " << meilleur_bInf_a << endl;
     cout << "la meilleure borne inf de 30 est  :  " << meilleur_bInf_b << endl;
+    
+    //on recupère la veleur de la meilleure solution trouvée dans la variable qui se trouve dans le main
+    bestSolValue=BestBornSup;
     cout << "la meilleure borne supest  :  " << BestBornSup << endl;
     
     for (int i=0; i<historiqSol[0]; i++)

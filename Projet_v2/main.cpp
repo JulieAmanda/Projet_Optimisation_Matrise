@@ -82,6 +82,9 @@ int main(int argc, const char * argv[]) {
     for (int i=0; i<m; ++i)
         tabBestSol[i]= new int[n];
     
+    //on va stocquer ici la valeur de la meilleure solution obtenue tout au long de l'algo de sous-gradient
+    float bestSolValue =0 ;
+    
     //on va à présent créer une table qui nous permettra d'enregistrer tout l'historique des valeurs des y_ij au cours des recherches de la meilleures borne supérieure. Pour chaque solution réalisable correspondant à une borneSup, on va enregistrer l'etat de chaque arc en sauvegardant les valeurs des y_ij. Cela nous permettra à la fin de constater les arcs qui sont toujours fermés ds ttes les solutions
     int nb=n*m;
     int ** historiqY_ij = new int * [countSlope];
@@ -90,11 +93,13 @@ int main(int argc, const char * argv[]) {
    
 
     //application de l'algorithme du sous gradient pour determiner la solution (voir le fichier subgradientMethod.cpp
-   Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom,  tabBestSol, historiqY_ij, nbCallHrstq);
+   Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom,  tabBestSol, bestSolValue, historiqY_ij, nbCallHrstq);
     
 
+    float finalSol = lastPostOptim(m, n,  tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, bestSolValue, tabBestSol, historiqY_ij, nbCallHrstq);
     
-   
+    cout<<endl;
+    cout << "la solution après amélioration et la meilleure est :  "<< finalSol << endl;
 //    cout<<endl;
 //    for (int i=0; i<a; i++)
 //        cout<< tRandom[i]<< "  ";
