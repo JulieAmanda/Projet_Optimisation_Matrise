@@ -30,6 +30,6 @@ float slopeRealValue(int m, int n, int ** tabSol, int ** tCoutFix, int ** tCoutV
 
 void costPostOptim(int m, int n, int **tabSol,  int ** tCoutVar, int ** tabCost);
 
-void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int ** tCoutFix, int ** tCoutVar, int ** tCapacity, int * tOffre, int * tDemand, int ** state , int & nbItSS, int *** tabBestSol);
+void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int ** tCoutFix, int ** tCoutVar, int ** tCapacity, int * tOffre, int * tDemand, int ** state );
 
 #endif /* SlotScaling_hpp */

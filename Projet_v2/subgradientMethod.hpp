@@ -15,7 +15,6 @@
 #include <iostream>
 
 
-using namespace std; 
 //paramètres à utiliser pour la méthode de sous-gradients
 
 //ELEMENTS POUR l'heuristique de mise à jour de la borne sup
@@ -46,7 +45,7 @@ bool lowerBndVariation(int nbIterationsMax, bool & updateStatus,  float & optima
 // count permet de savoir à combien de valeurs consécutives égales l'on est rendu
 
 
-IterationDetails Subgradient( int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int * tabDistAleatr, int & nbItSS, int *** tabBestSol);
+IterationDetails Subgradient( int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int * tabDistAleatr,  int ** tabBestSol, int ** historiqY_ij, int & nbCallHrstq);
 //tabSgrad_t_1 : table of the subgradients at the previous iteration
 //iteration : the current iteration
 

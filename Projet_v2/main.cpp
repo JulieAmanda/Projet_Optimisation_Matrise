@@ -71,13 +71,26 @@ int main(int argc, const char * argv[]) {
     
     
     //paramètre pour le slope scaling
-    const int countSlope = omga_4/callHrstq; //nombre max d'appel de slope Scaling possible
-    int * ** tabBestSol= new int ** [countSlope]; // tableau dans lequel on va classer les meilleures solutions de tous les appels de slope scaling
-    int  nbItSS=0; // pour compter le nombre d'appel de slope scaling(SS) qui a été fait
+    const int countSlope = omga_4/callHrstq; //nombre max d'appel de slope Scaling(ou d'heuristique lagrangienne) possible
     
+    //on va ensuite utiliser cette variable pour compter le nombre réel de fois que l'heuristique lagrangienne a déjà été appelé.
+    int nbCallHrstq = 0;
+    
+    //nous construisons la table qui nous permettra de sauvegarder les valeurs x_ij de la meilleure solution obtenue tout au long de l'algorithme.
+    
+    int ** tabBestSol = new int*[m];
+    for (int i=0; i<m; ++i)
+        tabBestSol[i]= new int[n];
+    
+    //on va à présent créer une table qui nous permettra d'enregistrer tout l'historique des valeurs des y_ij au cours des recherches de la meilleures borne supérieure. Pour chaque solution réalisable correspondant à une borneSup, on va enregistrer l'etat de chaque arc en sauvegardant les valeurs des y_ij. Cela nous permettra à la fin de constater les arcs qui sont toujours fermés ds ttes les solutions
+    int nb=n*m;
+    int ** historiqY_ij = new int * [countSlope];
+    for (int i=0; i<countSlope; ++i)
+        historiqY_ij[i]= new int [nb];
+   
 
     //application de l'algorithme du sous gradient pour determiner la solution (voir le fichier subgradientMethod.cpp
-   Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom,  nbItSS, tabBestSol);
+   Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom,  tabBestSol, historiqY_ij, nbCallHrstq);
     
 
     
@@ -94,14 +107,27 @@ int main(int argc, const char * argv[]) {
         delete [] tCoutFix[i];
         delete [] tCoutVar[i];
         delete [] tCapacity[i];
+      
     }
+    
     
     delete [] tCoutFix;
     delete [] tCoutVar;
     delete [] tCapacity;
     
+    for (int i=0; i<m; i++)
+    {
+      delete [] tabBestSol[i];
+    }
+    
+    
     delete [] tOffre;
     delete [] tDemand;
+    for (int i=0; i<countSlope; i++){
+        delete [] historiqY_ij[i];
+    }
+    delete [] historiqY_ij;
+    delete [] tabBestSol;
  
     
     return 0;

@@ -13,7 +13,7 @@
 #define projectParameters_h
 #include <string>
 
-using namespace std;
+using namespace std ;
 
 
 //on déclare le fichier à partir du quel on va extraire les echantillons
@@ -24,14 +24,13 @@ using namespace std;
 //const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 9 - B50 Theta0.2/30x30/1.dat" ; //E8
 
 
-const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 2 - Theta0.0/2.txt";
+//const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 2 - Theta0.0/2.txt";
 
 //THETA = 0.2  B=50
 //const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 9 - B50 Theta0.2/30x30/2.dat" ; //don't use --12534.5
 
 //const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/toy1.txt";
-
-//const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 3 - Theta0.2/3.txt";
+const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 3 - Theta0.2/3.txt";
 //const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 4 - Theta0.5/3.txt";
 
 

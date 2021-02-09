@@ -147,8 +147,13 @@ int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,
             mod.add(x[i][j] <= tCapacity[i][j]);
     }
     cplex.solve();
-    
-    
+//
+//    cout << endl<< "tSolution= "<<endl;
+//    for (int i=0; i< m; i++){
+//        cout << endl;
+//        for (int j=0; j<n; j++){
+//            cout << tSolution[i][j] << "  " ;
+//        }}
   
      
     cout << endl<< "x= "<<endl;
@@ -242,7 +247,7 @@ void costPostOptim(int m, int n, int **tabSol,  int ** tCoutVar, int ** tabCost)
 }
 
 
-void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int ** tCoutFix, int ** tCoutVar, int ** tCapacity, int * tOffre, int * tDemand, int ** state , int & nbItSS, int *** tabBestSol){
+void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int ** tCoutFix, int ** tCoutVar, int ** tCapacity, int * tOffre, int * tDemand, int ** state ){
     
     float valSolSlope=1000 ;//valeur de la solution à l'itération courante
     int valPrec=5 ;
@@ -423,6 +428,13 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
 
 
     
+    for (int i=0; i<m; i++){
+        delete [] tabCost[i];
+        delete [] bestSol[i];
+        
+    }
+    delete [] tabCost;
+    delete [] bestSol;
     
     
     
@@ -431,5 +443,11 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
     
     
 }
+
+//float lastOptim(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool  ignore, int ** state, float bestBornSup, int ** tabBestSol, int ** historiqY_ij ){
+//    
+//    
+//    
+//}
 
 

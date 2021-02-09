@@ -18,7 +18,8 @@
 #include <string.h>
 ILOSTLBEGIN
 
-float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool  ignore, int ** state, float bestBornSup, int ** bestSol, int ** historiqY_ij, int nbCallHrstq)
+//tabBestSol est la table dans laquelle on stoque la meilleure borne sup( solution réalisable obtenue tout le long de l'algorithme)
+float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, bool  ignore, int ** state, float bestBornSup, int ** tabBestSol, int ** historiqY_ij, int nbCallHrstq)
 {
     IloEnv env;
     IloModel mod(env); //model
@@ -114,7 +115,8 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     
     //*** on va determiner ici les 2 Inégalités valides qu'on pourrait ajouter ou pas au modèle
     
-    if (IV_suppl==1) // si on a choisi d'ajouter les contraintes suppl au modèle
+    //par défaut nous l'avons défini à 1.
+    if (IV_suppl==1) // si on a choisi d'ajouter les inégalités valides supplémentaires au modèle
     {
         //( sum(y_ij*u_ij , j in N) >= demand_j
         for (int j = 0; j< n; j++)
@@ -147,7 +149,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
             
             if (state[1][i] != -1){
                 a=state[0][i] / m;
-                b=state[0][i] % m;
+                b=state[0][i] % n;
                 mod.add(y[a][b] == state[1][i]);
                 
             }
@@ -166,28 +168,11 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     cout << endl <<" valeur de l'objectif = " << cplex.getObjValue() << endl;
     // cout << "algo utilisé"<< cplex.getAlgorithm() <<endl;
     
-    /*    cout << endl<< "x= "<<endl;
-     for (int i=0; i< m; i++){
-     cout << endl;
-     for (int j=0; j<n; j++){
-     cout << cplex.getValue(x[i][j]) << "  " ;
-     
-     }}
-     
-     cout << endl<< "y = "<<endl;
-     for (int i=0; i< m; i++){
-     cout << endl;
-     for (int j=0; j<n; j++){
-     cout << cplex.getValue(y[i][j]) << "  ";
-     
-     }}
-     */
-   
+
     
     //on ajoute les valeurs de y_ij suite à l'heuristiq lagrangienne dans l'historiqY_ij pour sauvegarder l'évolution de l'état des arcs
    
     if ( ignore==false){
-        int nb= n*m;
         
         for (int i=0; i< m; i++){
             cout << endl;
@@ -201,17 +186,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
             }
         }
     }
-//        for (int pos=0; pos<nb ; pos++){
-//            int i= pos/m;
-//            int j= pos % n;
-//            historiqY_ij[nbCallHrstq][pos]=int(cplex.getValue(y[i][j]));
-//            cout <<endl;
-//            cout<< "le tableau se print bien example" << historiqY_ij[nbCallHrstq][10]<< endl;
-//            cout<< endl;
-//
-//        }
-//    }
-//
+
    
     float res = cplex.getObjValue();
     
@@ -223,22 +198,41 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
             cout << endl;
             for (int j=0; j<n; j++){
                 //cout << cplex.getValue(x[i][j]) << "  " ;
-                bestSol[i][j]=int(cplex.getValue(x[i][j]));
+                tabBestSol[i][j]=int(cplex.getValue(x[i][j]));
             }
         }
-        
-    
     }
-    
-    
     env.end();
-  
-    
     return  res ;
-   
 }
 
 
+void currentClosedArcs (int ** historiqY_ij, int ** stateY_ij, int nbCallHrstq, int m, int n){
+    bool similar;
+    
+    int nb =m*n;
+    int i=0;
+    int k=1;
+    int a, b;
+    for ( int j=0; i<nb; j++){
+        similar=true;
+        a= nb/m;
+        b= nb %n;
+        if ( historiqY_ij[i][j]==0){
+            while (( k<nbCallHrstq) && (similar==true )){
+                if ( historiqY_ij[k][j]==0)
+                    k +=1;
+                else
+                    similar=false;
+            }
+            if (similar==true){
+                //cela marque que cet arc est toujours fermé
+                stateY_ij[a][b]=0;
+            }
+        }
+        else
+            stateY_ij[i][j]= -1;//on ne va pas s'interresser à l'etat de cet arc
+    }
 
 
-
+}
