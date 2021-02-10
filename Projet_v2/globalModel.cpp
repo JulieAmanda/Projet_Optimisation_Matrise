@@ -139,7 +139,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     if( ignore==false){
         int a, b;
         int nb= n*m;
-        for (int i=1; i<nb ; i++) {
+        for (int i=0; i<nb ; i++) {
             //ajouter if ( c'est different de -1)
            
             if (state[1][i] != -1){
