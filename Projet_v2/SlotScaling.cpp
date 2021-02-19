@@ -411,17 +411,17 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
 
 
     /* *****     Post-opt pour SS5  ***** */
-
+//
 //        //postoptimiser la meilleure solution de flot( bestsol) avec les couts reels
 //        costPostOptim(m, n, bestSol, tCoutVar, tabCost); //on va lui donner la table des meilleurs sol pour compute les couts qu'on va utiliser pour la postoptimisation
 //       valCour = flotProblem(m, n, tOffre, tDemand, tCapacity, bestSol, tabCost); //on execute à nouveau le pb de flot en postoptimisation avec les couts cij les resultats des variables on les garde dans tabsolscaling
 //        bestVal = slopeRealValue(m, n, bestSol, tCoutFix, tCoutVar);// c'est tabsolscaling qui contient deja les valeurs de la meilleur solution postoptimisée. donc on va calculer la meilleure valeur utilisant les solutions qui sont ds tabsolScaling
 //        cout<< "la valeur de la sol après post optim est :" << bestVal;
-//
-//
-//    //on va ensuite mettre à jour la fermeture et l'ouverture des arcs en modifiant l'etat des arcs dans le tableau state
-//    updateTabState(bestSol, state, m, n);
-//    bornSup= bestVal; //on sauvegarde la meilleure borne sup retournée par la procédure
+
+
+    //on va ensuite mettre à jour la fermeture et l'ouverture des arcs en modifiant l'etat des arcs dans le tableau state
+    updateTabState(bestSol, state, m, n);
+    bornSup= bestVal; //on sauvegarde la meilleure borne sup retournée par la procédure
 
     
    /* *******    fin postOpt   ***** **/

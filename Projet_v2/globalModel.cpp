@@ -207,6 +207,10 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
 }
 
 
+
+
+
+
 void currentClosedArcs (int ** historiqY_ij, int ** stateY_ij, int nbCallHrstq, int m, int n){
     bool similar;
     
@@ -236,6 +240,8 @@ void currentClosedArcs (int ** historiqY_ij, int ** stateY_ij, int nbCallHrstq, 
 
 
 }
+
+
 
 
 float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, float bestBornSup, int ** tabBestSol, int ** historiqY_ij, int nbCallHrstq){
