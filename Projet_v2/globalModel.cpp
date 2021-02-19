@@ -180,8 +180,8 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
                 int pos=i*m+j;
                 historiqY_ij[nbCallHrstq][pos]=int(cplex.getValue(y[i][j]));
                 cout <<endl;
-                cout<< "le tableau se print bien example" << historiqY_ij[nbCallHrstq][10]<< endl;
-                cout<< endl;
+//                cout<< "le tableau se print bien example" << historiqY_ij[nbCallHrstq][10]<< endl;
+//                cout<< endl;
                 
             }
         }

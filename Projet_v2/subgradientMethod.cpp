@@ -254,6 +254,7 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
                 
                
                 //avec la solution issue du slope scaling, on va calculer une nvelle  la borne supérieure en resolvant le probleme global restreint par la fermeture des arcs dont state=0
+                //c'est également ds cette méthode qu'on contruit l'historique des y_ij et qu'o recueille la meilleure solution
                 float bornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity,ignore, state,BestBornSup, tabBestSol, historiqY_ij, nbCallHrstq);
 
                 cout<<"borne sup évaluée d'après le modèle global est : "<< bornSup ;

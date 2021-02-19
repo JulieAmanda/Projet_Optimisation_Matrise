@@ -96,14 +96,12 @@ int main(int argc, const char * argv[]) {
    Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom,  tabBestSol, bestSolValue, historiqY_ij, nbCallHrstq);
     
 
-    float finalSol = lastPostOptim(m, n,  tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, bestSolValue, tabBestSol, historiqY_ij, nbCallHrstq);
-    
-    cout<<endl;
-    cout << "la solution après amélioration et la meilleure est :  "<< finalSol << endl;
+//    float finalSol = lastPostOptim(m, n,  tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, bestSolValue, tabBestSol, historiqY_ij, nbCallHrstq);
+//    
 //    cout<<endl;
-//    for (int i=0; i<a; i++)
-//        cout<< tRandom[i]<< "  ";
-//
+//    cout << "la solution après amélioration et la meilleure est :  "<< finalSol << endl;
+//    
+
     
     
     //  ***  on libere les pointeurs qui ont ete utiliser pour stocker les données
