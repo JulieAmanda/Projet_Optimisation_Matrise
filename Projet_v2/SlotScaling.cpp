@@ -62,7 +62,7 @@ void costUpdate ( int m, int n, int iterationNb, int ** state, int **tabSol,  in
 //on va construire et resoudre un modèle de transport classique en linéarisant le modèle de base
 //la fonction retourne la valeur de l'objectif à chaque appel
 
-int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,  int ** tSolution, int ** tabCost)
+int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,  int ** tSolution, int ** tabCost, int postOptim)
 {
     IloEnv env;
     IloModel mod(env); //model
@@ -125,6 +125,16 @@ int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,
     
     
     // *** definissons à présent les contraintes
+    
+    //dans le cas l'on est à l'étape de postOptimisation
+    if( postOptim==1){
+        for ( int i=0; i<m; i++){
+            for (int j=0; j<n; j++){
+                if (tSolution[i][j]==0)
+                    mod.add(x[i][j]==0);
+            }
+        }
+    }
     
     //( sum(x_ij , i in M)= offre_i
     //pour chacun des m sous-tableaux/cases du tableau principal iloarray, on va prendre lélement j parmi n
@@ -230,9 +240,9 @@ void costPostOptim(int m, int n, int **tabSol,  int ** tCoutVar, int ** tabCost)
     
     for (int i=0; i< m; i++){
         for (int j=0; j<n; j++){
-            if (tabSol[i][j]==0)
-                tabCost[i][j] = Mpost; //on fixe un cout tres eleve de sorte à empecher le flot à passer par cet arc
-            else
+//            if (tabSol[i][j]==0)
+//                tabCost[i][j] = Mpost; //on fixe un cout tres eleve de sorte à empecher le flot à passer par cet arc
+//            else
                 tabCost[i][j]=tCoutVar[i][j];
         }
     }
@@ -254,6 +264,8 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
     int ** bestSol = new int * [m];
     for (int i=0; i<m;i++)
         bestSol[i]= new int [n];
+    
+    int postOptim = 0;
     
     //on cree une table pour receuillir les couts linéaires au fil des iterations du slot scaling
     int ** tabCost = new int * [m];
@@ -277,14 +289,14 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
     //pour en savoir plus sur les détails d'un scénarios veuillez lire la description dans la partie résultats expérimentaux du mémoire.
     
     
-    /*******    SS  *******/
+    /*******    SS0  *******/
     
 //    while (k<10) {
 //
 //        // faire le cost update ici
 //        costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
 //
-//        valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost);//iteration 0
+//        valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost, postOptim);//iteration 0
 //        valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
 //
 //        k++;
@@ -299,23 +311,23 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
     /*******    SS1  *******/
     //on arrete les itérations lorsqu'on trouve successivement deux solutions correspondant à la même solution réelle calculée qui est une borne sup. on travaille avec cette dernière solution
     
-     while (next) {
-
-     valPrec=valSolSlope;
-
-     // faire le cost update ici
-     costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
-
-
-     valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost);//iteration 0
-         valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
-     if (valSolSlope == valPrec)
-     next=false;
-
-     k++;
-     }
-    bornSup=valSolSlope;
-     updateTabState(tabSolScaling, state, m, n);
+//     while (next) {
+//
+//     valPrec=valSolSlope;
+//
+//     // faire le cost update ici
+//     costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
+//
+//
+//     valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost, postOptim);//iteration 0
+//         valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
+//     if (valSolSlope == valPrec)
+//     next=false;
+//
+//     k++;
+//     }
+//    bornSup=valSolSlope;
+//     updateTabState(tabSolScaling, state, m, n);
 
      /******  fin SS1 ********/
     
@@ -332,7 +344,7 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
 //        costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
 //
 //
-//        valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost);//iteration 0
+//        valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost, postOptim);//iteration 0
 //         valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
 //        if (valCour == valPrec)
 //                 next=false;
@@ -351,55 +363,55 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
     //on fait comme en SS1 mais ensuite on travaille avec la solution permettant d'obtenir la meilleure solution
     
      //on va appliquer une procédure de slopescaling pour relier les sources aux destinations et s'assurer que le nombre d'arcs ouvert et fermés nous permet d'avoir une solution réalisable.
-//    while (next ){ //(valPrec!=valSolSlope)&&  stop == false
-//
-//
-//
-//        valPrec=valSolSlope;
-//
-//        //faire le cost update ici
-//        costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
-//
-//       valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost);//iteration 0
-//
-//        valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
-//        cout << "la valeur de la sol evaluée ds le prob global est : " << valSolSlope <<endl;
-//
-//
-//
-//        if (valSolSlope == valPrec)
-//            next=false;
-//
-//
-//        //chercher la meilleure solution
-//        if (valSolSlope < bestVal){ //si la solution de l'itération courante est meilleure que celles des itérations precdt
-//            bestVal=valSolSlope; // on recueille cette valeur coe etant la meilleure soltn du slope Scal
-//            for (int i=0; i< m; i++){
-//                for(int j=0; j<n ; j++)
-//                    bestSol[i][j]= tabSolScaling[i][j]; //on receueille également ds une table les valeurs des variables
-//            }
-//        }
-// cout << "la valeur reelle meilleure solution   est : " << bestVal <<endl;
-//
-//        k +=1;
-//    }
-//
-//    cout << "le nombre d'itération est " << k << endl;
-//
-//
-////   // tabBestSol[nbItSS]=bestSol;
-////    // nbItSS +=1;
-//
-//
-//    cout<<"borne sup évaluée avec la formule slopeRealValue "<< bestVal ;
-//
-//
-////   // on va ensuite mettre à jour la fermeture et l'ouverture des arcs en modifiant l'etat des arcs dans le tableau state
-//    //cette partie n'est pas neccessaire si on ajoute la postOpt car ces lignes seront appelée à la fin de toute la méthode.
-//        updateTabState(bestSol, state, m, n);
-//        bornSup= bestVal; //on sauvegarde la meilleure borne sup retournée par la procédure
-//
-//
+    while (next ){ //(valPrec!=valSolSlope)&&  stop == false
+
+
+
+        valPrec=valSolSlope;
+
+        //faire le cost update ici
+        costUpdate(m, n, k, state, tabSolScaling, tCoutVar, tCoutFix, tCapacity, tabCost); //on fait un costupdate pour l'iteration k
+
+       valCour = flotProblem(m, n,  tOffre, tDemand, tCapacity, tabSolScaling, tabCost, postOptim);//iteration 0
+
+        valSolSlope= slopeRealValue(m, n, tabSolScaling, tCoutFix, tCoutVar);
+        cout << "la valeur de la sol evaluée ds le prob global est : " << valSolSlope <<endl;
+
+
+
+        if (valSolSlope == valPrec)
+            next=false;
+
+
+        //chercher la meilleure solution
+        if (valSolSlope < bestVal){ //si la solution de l'itération courante est meilleure que celles des itérations precdt
+            bestVal=valSolSlope; // on recueille cette valeur coe etant la meilleure soltn du slope Scal
+            for (int i=0; i< m; i++){
+                for(int j=0; j<n ; j++)
+                    bestSol[i][j]= tabSolScaling[i][j]; //on receueille également ds une table les valeurs des variables
+            }
+        }
+ cout << "la valeur reelle meilleure solution   est : " << bestVal <<endl;
+
+        k +=1;
+    }
+
+    cout << "le nombre d'itération est " << k << endl;
+
+
+//   // tabBestSol[nbItSS]=bestSol;
+//    // nbItSS +=1;
+
+
+    cout<<"borne sup évaluée avec la formule slopeRealValue "<< bestVal ;
+
+
+//   // on va ensuite mettre à jour la fermeture et l'ouverture des arcs en modifiant l'etat des arcs dans le tableau state
+    //cette partie n'est pas neccessaire si on ajoute la postOpt car ces lignes seront appelée à la fin de toute la méthode.
+        updateTabState(bestSol, state, m, n);
+        bornSup= bestVal; //on sauvegarde la meilleure borne sup retournée par la procédure
+
+
 
    /*   ****** fin SS4 (ou SS5)    *******    */
 
@@ -407,16 +419,19 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
 
     /* *****     Post-opt pour SS5  ***** */
 
-//        //postoptimiser la meilleure solution de flot( bestsol) avec les couts reels
-//        costPostOptim(m, n, bestSol, tCoutVar, tabCost); //on va lui donner la table des meilleurs sol pour compute les couts qu'on va utiliser pour la postoptimisation
-//       valCour = flotProblem(m, n, tOffre, tDemand, tCapacity, bestSol, tabCost); //on execute à nouveau le pb de flot en postoptimisation avec les couts cij les resultats des variables on les garde dans tabsolscaling
-//        bestVal = slopeRealValue(m, n, bestSol, tCoutFix, tCoutVar);// c'est tabsolscaling qui contient deja les valeurs de la meilleur solution postoptimisée. donc on va calculer la meilleure valeur utilisant les solutions qui sont ds tabsolScaling
-//        cout<< "la valeur de la sol après post optim est :" << bestVal;
-//
-//
-//    //on va ensuite mettre à jour la fermeture et l'ouverture des arcs en modifiant l'etat des arcs dans le tableau state
-//    updateTabState(bestSol, state, m, n);
-//    bornSup= bestVal; //on sauvegarde la meilleure borne sup retournée par la procédure
+        //postoptimiser la meilleure solution de flot( bestsol) avec les couts reels
+        costPostOptim(m, n, bestSol, tCoutVar, tabCost); //on va lui donner la table des meilleurs sol pour compute les couts qu'on va utiliser pour la postoptimisation
+    
+    postOptim = 1;
+    
+       valCour = flotProblem(m, n, tOffre, tDemand, tCapacity, bestSol, tabCost, postOptim); //on execute à nouveau le pb de flot en postoptimisation avec les couts cij les resultats des variables on les garde dans tabsolscaling
+        bestVal = slopeRealValue(m, n, bestSol, tCoutFix, tCoutVar);// c'est tabsolscaling qui contient deja les valeurs de la meilleur solution postoptimisée. donc on va calculer la meilleure valeur utilisant les solutions qui sont ds tabsolScaling
+        cout<< "la valeur de la sol après post optim est :" << bestVal;
+
+
+    //on va ensuite mettre à jour la fermeture et l'ouverture des arcs en modifiant l'etat des arcs dans le tableau state
+    updateTabState(bestSol, state, m, n);
+    bornSup= bestVal; //on sauvegarde la meilleure borne sup retournée par la procédure
 
     
    /* *******    fin postOpt   ***** **/

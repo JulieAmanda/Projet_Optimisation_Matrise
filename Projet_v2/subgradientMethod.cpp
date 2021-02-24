@@ -264,17 +264,17 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
 
                 
 //                /**** calcul de la bsup après Slope scaling : stratégie T2  ****/
-//                            int a= historiqSol[0]-1;
-//                            tabBornsup[a]=bornSup;
-//                             if (bornSup<BestBornSup)
-//                             BestBornSup=bornSup;
+                            int a= historiqSol[0]-1;
+                            tabBornsup[a]=bornSup;
+                             if (bornSup<BestBornSup)
+                             BestBornSup=bornSup;
 
               
                   /**** calcul de la bsup après Slope scaling : stratégie T1  ****/
-                int a= historiqSol[0]-1;
-                tabBornsup[a]=bornsupSS;
-                if (bornsupSS<BestBornSup)
-                    BestBornSup=bornsupSS;
+//                int a= historiqSol[0]-1;
+//                tabBornsup[a]=bornsupSS;
+//                if (bornsupSS<BestBornSup)
+//                    BestBornSup=bornsupSS;
 
               
                 

@@ -21,7 +21,7 @@ const int Mpost=10000000; // cout des arcs à fermer pour la postoptimisation ap
 
 //fonction qui implémente la procédure
 
-int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,  int ** tSolution, int ** tabCost);
+int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,  int ** tSolution, int ** tabCost, int postOptim);
 
 void costUpdate ( int m, int n, int iterationNb, int ** state, int **tabSol,  int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int ** tabCost );
 
