@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <ctime>
 #include "IterationDetails.hpp"
 #include "samples.hpp"
 #include "projectParameters.h"
@@ -20,6 +21,7 @@
 
 
 using namespace std;
+
 
 
 
@@ -65,44 +67,94 @@ int main(int argc, const char * argv[]) {
     //on va construire le tableau des capacités
     BuiltCapacity(m, n, tOffre, tDemand, tCapacity);//voir samples.cpp
     
+    //on cree une variable pour calculer le temps d'execution total
+    float temp =0;
+    time_t before = time(0); //le temps systeme actuel en seconde
+    
+    /* cas 1 : l'on veut laisser le modèle globale à cplex pour qu'il applique ses propres algo. le code suivant doit être laissé en commentaire si vous ne souhaitez pas tester ce cas. Si vous testez ce cas mettez le code entre le debut et la fin du cas 2 en commentaire */
+
+//    int timelimit = 3600;
+//    float resCplex= globalModel(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, timelimit);
+//
+//    cout << " le resultat trouvé par cplex dans la période de temps donnée est " << resCplex << endl;
+//
+    
+    /* fin de ce cas si vous voulez tester ce cas enlever le en commentaire si non laisser le code entre ces deux commentaires sous forme de commentaire et tester le cas suivant. */
+    
+    
+    
+    
+    
+    /* cas 2 : nous implémentons notre méthode de sous gradient avec heuristique lagrangienne, slope scaling et postOptimisation */
+    
+
+
     //construction d'un tableau de distribution aléatoire qui nous servira pour notre heuristique de borne sup dans l'algo de sous-gradient
    // int a=n*m;
     int * tRandom  = DistribAleatoire(n, m);
-    
-    
+
+
     //paramètre pour le slope scaling
     const int countSlope = omga_4/callHrstq; //nombre max d'appel de slope Scaling(ou d'heuristique lagrangienne) possible
-    
+
     //on va ensuite utiliser cette variable pour compter le nombre réel de fois que l'heuristique lagrangienne a déjà été appelé.
     int nbCallHrstq = 0;
-    
+
     //nous construisons la table qui nous permettra de sauvegarder les valeurs x_ij de la meilleure solution obtenue tout au long de l'algorithme.
-    
+
     int ** tabBestSol = new int*[m];
     for (int i=0; i<m; ++i)
         tabBestSol[i]= new int[n];
-    
+
     //on va stocquer ici la valeur de la meilleure solution obtenue tout au long de l'algo de sous-gradient
     float bestSolValue =0 ;
-    
+
+
     //on va à présent créer une table qui nous permettra d'enregistrer tout l'historique des valeurs des y_ij au cours des recherches de la meilleures borne supérieure. Pour chaque solution réalisable correspondant à une borneSup, on va enregistrer l'etat de chaque arc en sauvegardant les valeurs des y_ij. Cela nous permettra à la fin de constater les arcs qui sont toujours fermés ds ttes les solutions
     int nb=n*m;
     int ** historiqY_ij = new int * [countSlope];
     for (int i=0; i<countSlope; ++i)
         historiqY_ij[i]= new int [nb];
-   
+
 
     //application de l'algorithme du sous gradient pour determiner la solution (voir le fichier subgradientMethod.cpp
    Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom,  tabBestSol, bestSolValue, historiqY_ij, nbCallHrstq);
-    
 
-//    float finalSol = lastPostOptim(m, n,  tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, bestSolValue, tabBestSol, historiqY_ij, nbCallHrstq);
-//    
-//    cout<<endl;
-//    cout << "la solution après amélioration et la meilleure est :  "<< finalSol << endl;
-//    
+   
+    float finalSol = lastPostOptim(m, n,  tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, bestSolValue, tabBestSol, historiqY_ij, nbCallHrstq);
 
     
+
+    cout<<endl;
+    cout << "la solution après amélioration et la meilleure est :  "<< finalSol << endl;
+//
+
+    for (int i=0; i<m; i++)
+    {
+        delete [] tabBestSol[i];
+    }
+
+
+
+    for (int i=0; i<countSlope; i++){
+        delete [] historiqY_ij[i];
+    }
+    delete [] historiqY_ij;
+    delete [] tabBestSol;
+
+
+    
+    /* fin du code pour le cas 2*/
+    
+    
+    
+   
+    time_t after = time(0);
+    temp=after-before;
+    
+    
+     cout << "Le temps total d'execution en secondes est " << temp << endl;
+    cout << " Temps d'execution en minutes : " << temp/60 << " et en heures : " << temp /3600 << endl;
     
     //  ***  on libere les pointeurs qui ont ete utiliser pour stocker les données
         for (int i=0; i<m; i++)
@@ -113,25 +165,12 @@ int main(int argc, const char * argv[]) {
       
     }
     
-    
+    delete [] tOffre;
+    delete [] tDemand;
     delete [] tCoutFix;
     delete [] tCoutVar;
     delete [] tCapacity;
     
-    for (int i=0; i<m; i++)
-    {
-      delete [] tabBestSol[i];
-    }
-    
-    
-    delete [] tOffre;
-    delete [] tDemand;
-    for (int i=0; i<countSlope; i++){
-        delete [] historiqY_ij[i];
-    }
-    delete [] historiqY_ij;
-    delete [] tabBestSol;
- 
-    
+   
     return 0;
 }

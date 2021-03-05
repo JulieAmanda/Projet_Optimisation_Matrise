@@ -266,8 +266,8 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
 //on va repertotier l'ensemble des bornes sup obtenues tout au long
                             int a= historiqSol[0]-1;
                             tabBornsup[a]=bornSup;
-//                             if (bornSup<BestBornSup)
-//                             BestBornSup=bornSup;
+                             if (bornSup<BestBornSup)
+                             BestBornSup=bornSup;
 
               
                   /**** calcul de la bsup après Slope scaling : stratégie T1  ****/
@@ -395,6 +395,8 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     
     for (int i=0; i<historiqSol[0]; i++)
          cout<< tabBornsup[i] << "   " ;
+    
+    cout<<endl;
     
 
     
