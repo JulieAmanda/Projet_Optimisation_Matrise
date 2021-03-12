@@ -398,7 +398,19 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     
     cout<<endl;
     
+    cout<< " la valeur de la meilleure solution est : "<< BestBornSup << endl;
+    
+    
+    cout<< "la table de la meilleure solution est est : "<< endl;
+    
+    for(int i=0 ; i<m ; i++)
+    {
+        for(int j=0; j<n ; j++)
+            cout << tabBestSol[i][j] << "  " ;
+        cout<<endl;
+    }
 
+    cout << "le nombre de solution calculée ( nbre de fois que l'heuristique a été appelée) est : " << nbCallHrstq << endl;
     
     //  ***  on libere les pointeurs qui ont ete utiliser pour stocker les données
     

@@ -120,7 +120,8 @@ int main(int argc, const char * argv[]) {
     //application de l'algorithme du sous gradient pour determiner la solution (voir le fichier subgradientMethod.cpp
    Subgradient(m, n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, tRandom,  tabBestSol, bestSolValue, historiqY_ij, nbCallHrstq);
 
-   
+    cout << "le nombre de solution calculée ( nbre de fois que l'heuristique a été appelée) est : " << nbCallHrstq << endl;
+    
     float finalSol = lastPostOptim(m, n,  tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, bestSolValue, tabBestSol, historiqY_ij, nbCallHrstq);
 
     

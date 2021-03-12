@@ -169,14 +169,14 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
 
     
     //on ajoute les valeurs de y_ij suite à l'heuristiq lagrangienne dans l'historiqY_ij pour sauvegarder l'évolution de l'état des arcs
-   
+    int pos;
     if ( ignore==false){
         
         for (int i=0; i< m; i++){
             cout << endl;
             for (int j=0; j<n; j++){
-                int pos=i*m+j;
-                historiqY_ij[nbCallHrstq][pos]=int(cplex.getValue(y[i][j]));
+                 pos=i*n+j;
+                historiqY_ij[nbCallHrstq][pos]=int(cplex.getValue(x[i][j]));
                 cout <<endl;
 //                cout<< "le tableau se print bien example" << historiqY_ij[nbCallHrstq][10]<< endl;
 //                cout<< endl;
@@ -215,31 +215,49 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
 void currentClosedArcs (int ** historiqY_ij, int ** stateY_ij, int nbCallHrstq, int m, int n){
     bool similar;
     
+    cout << "le nombre de solution calculée ( nbre de fois que l'heuristique a été appelée) est : " << nbCallHrstq << endl;
+    
     int nb =m*n;
+   
     int i=0;
-    int k=1;
+    int k;
     int a, b;
     for ( int j=0; j<nb; j++){
-        similar=true;
         a= j/n;
         b= j % n;
-        if ( historiqY_ij[i][j]==0){
-            while (( k<nbCallHrstq) && (similar==true )){
+        if (historiqY_ij[i][j]==0){
+            similar=true;
+            k=1;
+            while (( k<nbCallHrstq) && (similar)){
                 if ( historiqY_ij[k][j]==0)
                     k +=1;
                 else
                     similar=false;
             }
-            if (similar==true){
+            if (similar == true){
+//                 && (stateY_ij[a][b]=0)
                 //cela marque que cet arc est toujours fermé
                 stateY_ij[a][b]=0;
             }
+            else
+                stateY_ij[a][b]= -1;//on ne va pas s'interresser à l'etat de cet arc
+            
         }
         else
-            stateY_ij[i][j]= -1;//on ne va pas s'interresser à l'etat de cet arc
+            stateY_ij[a][b]= -1;//on ne va pas s'interresser à l'etat de cet arc
     }
-
-
+    
+    
+    cout<< "la table des arcs régulièrement fermés est : "<< endl;
+    
+    for(int i=0 ; i<m ; i++)
+    {
+        for(int j=0; j<n ; j++)
+            cout << stateY_ij[i][j] << "  " ;
+        cout<<endl;
+    }
+    
+    
 }
 
 
@@ -272,10 +290,29 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
     //if (useBenders==1)
     // cplex.setParam(IloCplex::Param::Benders::Strategy, 3);
     
+    
+    cout<< " la valeur de la meilleure solution est : "<< bestBornSup << endl;
+    
+   
+    cout<< "la table de la meilleure solution est est : "<< endl;
+    
+    for(int i=0 ; i<m ; i++)
+    {
+        for(int j=0; j<n ; j++)
+            cout << tabBestSol[i][j] << "  " ;
+        cout<<endl;
+    }
+//    
+//    cout << "le nombre de solution calculée ( nbre de fois que l'heuristique a été appelée) est : " << nbCallHrstq << endl;
+    
     //on cree une table qui servira à récupérer les arcs qui sont toujours fermés dans toutes les solutions parcourues
     int ** stateY_ij = new int * [m];
-    for (int i=0; i<m;i++)
+    for (int i=0; i<m;i++){
         stateY_ij[i]= new int [n];
+        for(int j=0; j<n ; j++)
+            stateY_ij[i][j] =0;
+    }
+    
     
     
     //on recupere les valeurs de tabBestsol pour convertir en type iloNum
@@ -339,6 +376,21 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
     //chaque x[i] est un tableau de m variables binaires
     for(int i=0 ; i<m ; i++)
         y[i] = IloNumVarArray (env, n, 0, 1, ILOINT);
+    
+    int nb=2*m*n;
+    IloNumVarArray tabVar(env, nb, 0, IloInfinity, ILOINT);
+    IloNumArray tabVal (env, nb, 0, IloInfinity, ILOINT);
+    int pos, pos2;
+    for (int i=0; i<m; i++){
+        for (int j=0; j<n ; j++){
+            pos=i*n + j;
+            pos2= pos + n*m;
+            tabVar[pos] = x[i][j];
+            tabVar[pos2] = y[i][j];
+            tabVal[pos] = val_X[i][j];
+            tabVal[pos2] = val_Y[i][j];
+        }
+    }
     
     // ***construisons l'expression de la fonction objetif
     
@@ -420,10 +472,12 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
     for (int i=0; i<m; i++){
         cplex.addMIPStart(x[i], val_X[i]);
     }
-    
+
     for (int i=0; i<m; i++){
         cplex.addMIPStart(y[i], val_Y[i]);
     }
+    
+//     cplex.addMIPStart(tabVar, tabVal);
     
     
     // ------------------ AFFICHAGE ET OPTIMISATION ----------------

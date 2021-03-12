@@ -79,7 +79,7 @@ int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,
 
     
     //dire à cplex de s'arreter à la racine
-    cplex.setParam(IloCplex::Param::MIP::Limits::Nodes, 1);
+   // cplex.setParam(IloCplex::Param::MIP::Limits::Nodes, 1);
     
     
     //set de l'algorithme à utiliser pour la resolution

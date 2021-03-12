@@ -18,7 +18,7 @@ using namespace std ;
 
 //on déclare le fichier à partir du quel on va extraire les echantillons
 //const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 5 - B20 Theta0.0/50x50/1.dat" ; //E6
-const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 5 - B20 Theta0.0/30x30/2.dat" ; //E7
+//const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 5 - B20 Theta0.0/30x30/2.dat" ; //E7
 
 
 //const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 9 - B50 Theta0.2/30x30/1.dat" ; //E8
@@ -30,7 +30,7 @@ const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/
 //const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/Table 9 - B50 Theta0.2/30x30/2.dat" ; //don't use --12534.5
 
 //const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/toy1.txt";
-//const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 3 - Theta0.2/1.txt";
+const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 3 - Theta0.2/2.txt";
 //const string monFichier ="/Users/julieamanda/Documents/WorkspaceMem/Data Set 2/Table 4 - Theta0.5/3.txt";
 
 
@@ -38,7 +38,7 @@ const string monFichier = "/Users/julieamanda/Documents/WorkspaceMem/Data Set 3/
 // on a deux groupes(dossiers) d echantillons et le formatage des données dans les fichiers est different dans chacun des deux dossiers, il est donc important de preciser le numero du dossier ( 2<-> data set 2 ou 3 <-> data set 3) pour que le programme appelle la bonne methode de lecture de données
 
 // on veut preciser le groupe du dossier ( 2 ou 3) pour mieux gerer la lecture des données dans les fichiers
-const int datasetGroup = 3;
+const int datasetGroup = 2;
 
 //le param nu pour la methode de sous-gradient
 const float nu= 0.5;
