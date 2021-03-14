@@ -79,7 +79,7 @@ int flotProblem(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCapacity,
 
     
     //dire à cplex de s'arreter à la racine
-    cplex.setParam(IloCplex::Param::MIP::Limits::Nodes, 1);
+    //cplex.setParam(IloCplex::Param::MIP::Limits::Nodes, 1);
     
     
     //set de l'algorithme à utiliser pour la resolution
@@ -359,7 +359,7 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
     
     
     
-   /* ******    SS4 (ou SS5 ) (voir le fichier subgradMethod.cpp pour la détermination de la methode T1 ou T2) juste après l'appel de la méthode slope scaling  ***** */
+   /* ******    SS4 (ou SS3 ) (voir le fichier subgradMethod.cpp pour la détermination de la methode T1 ou T2) juste après l'appel de la méthode slope scaling  ***** */
     //on fait comme en SS1 mais ensuite on travaille avec la solution permettant d'obtenir la meilleure solution
     
      //on va appliquer une procédure de slopescaling pour relier les sources aux destinations et s'assurer que le nombre d'arcs ouvert et fermés nous permet d'avoir une solution réalisable.
