@@ -10,6 +10,7 @@
 
 
 #include "globalModel.hpp"
+#include "SlotScaling.hpp"
 #include "projectParameters.h"
 #include "heuristiqBSup.hpp"
 //#include "samples.hpp"
@@ -67,7 +68,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     IloArray<IloNumVarArray> x (env, m);//m ici est le nombre de sinks voir sample.h
     //chaque x[i] est un tableau de m variables reelles
     for(int i=0 ; i<m ; i++)
-        x[i] = IloNumVarArray(env, n, 0.0, IloInfinity, ILOINT);
+        x[i] = IloNumVarArray(env, n, 0.0, IloInfinity);
     
     
     IloArray<IloNumVarArray> y (env, m);//m ici est le nombre de sinks voir sample.h
@@ -77,7 +78,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     
     // ***construisons l'expression de la fonction objetif
     
-    IloExpr obj(env);
+    IloExpr obj(env) ;
     for (int i= 0; i<m ; i++)
     {
         for(int j=0; j<n; j++)
@@ -189,7 +190,7 @@ float ModelBase_Bsup(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCout
     float res = cplex.getObjValue();
     
     //on verifie s'il faut une mise à jour de la borne sup
-    if( res>bestBornSup){
+    if( res<bestBornSup){
         bestBornSup=res;
         //on sauvegarde cette meilleure solution
         for (int i=0; i< m; i++){
@@ -277,7 +278,11 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
     cplex.setParam(IloCplex::Param::Threads, 1);
     
     //on va préciser à cplex la valeur de la meilleure solution afin qu'il coupe ou ignore tous les noeuds ne proposant pas une meilleure valeur que cette solution
-    cplex.setParam(IloCplex::CutUp, bestBornSup);
+    
+    float valsol = slopeRealValue(m, n, tabBestSol, tCoutFix, tCoutVar);
+    cout<< "la valeur de la meilleure solution realVal est : " << valsol << endl ;
+    
+    cplex.setParam(IloCplex::CutUp, valsol);
     
     //temps cpu max = 1h30 (en secondes)
     //cplex.setParam(IloCplex::TiLim, 9000);
@@ -291,17 +296,17 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
     // cplex.setParam(IloCplex::Param::Benders::Strategy, 3);
     
     
-    cout<< " la valeur de la meilleure solution est : "<< bestBornSup << endl;
-    
-   
-    cout<< "la table de la meilleure solution est est : "<< endl;
-    
-    for(int i=0 ; i<m ; i++)
-    {
-        for(int j=0; j<n ; j++)
-            cout << tabBestSol[i][j] << "  " ;
-        cout<<endl;
-    }
+//    cout<< " la valeur de la meilleure solution est : "<< bestBornSup << endl;
+//    
+//   
+//    cout<< "la table de la meilleure solution est est : "<< endl;
+//    
+//    for(int i=0 ; i<m ; i++)
+//    {
+//        for(int j=0; j<n ; j++)
+//            cout << tabBestSol[i][j] << "  " ;
+//        cout<<endl;
+//    }
 //    
 //    cout << "le nombre de solution calculée ( nbre de fois que l'heuristique a été appelée) est : " << nbCallHrstq << endl;
     
@@ -316,30 +321,30 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
     
     
     //on recupere les valeurs de tabBestsol pour convertir en type iloNum
-    IloArray<IloNumArray> val_X (env, m);
-    for(int i=0 ; i<m ; i++)
-    {
-        val_X[i]= IloNumArray(env, n);
-        for(int j=0; j<n ; j++)
-            val_X[i][j]= tabBestSol[i][j];
-    }
-    
+//    IloArray<IloNumArray> val_X (env, m);
+//    for(int i=0 ; i<m ; i++)
+//    {
+//        val_X[i]= IloNumArray(env, n);
+//        for(int j=0; j<n ; j++)
+//            val_X[i][j]= tabBestSol[i][j];
+//    }
+//
     
     
     //nous allons dans ce tableau stocker les valeurs de y_ij pour la meilleur solution que nous allons passer en paramètres à CPLEX
-      //ON VA RÉCUPÉRER les valeurs des variables y_ij correspondant à tabBestSol.
-    IloArray<IloNumArray> val_Y (env, m);
-    for(int i=0 ; i<m ; i++)
-    {
-        val_Y[i]= IloNumArray(env, n);
-        for (int j=0; j<n ; j++){
-            if ( tabBestSol[i][j] >0)
-                val_Y[i][j] = 1;
-            else
-                val_Y[i][j]=0;
-        }
-    }
- 
+//      //ON VA RÉCUPÉRER les valeurs des variables y_ij correspondant à tabBestSol.
+//    IloArray<IloNumArray> val_Y (env, m);
+//    for(int i=0 ; i<m ; i++)
+//    {
+//        val_Y[i]= IloNumArray(env, n);
+//        for (int j=0; j<n ; j++){
+//            if ( tabBestSol[i][j] >0)
+//                val_Y[i][j] = 1;
+//            else
+//                val_Y[i][j]=0;
+//        }
+//    }
+//
    
     
     // *** on recopie le tableau tCoutVar en standard iloconcert. on le recupere en transposee
@@ -369,7 +374,7 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
     IloArray<IloNumVarArray> x (env, m);//m ici est le nombre de sinks voir sample.h
     //chaque x[i] est un tableau de m variables reelles
     for(int i=0 ; i<m ; i++)
-        x[i] = IloNumVarArray(env, n, 0, IloInfinity, ILOINT);
+        x[i] = IloNumVarArray(env, n, 0, IloInfinity);
     
     
     IloArray<IloNumVarArray> y (env, m);//m ici est le nombre de sinks voir sample.h
@@ -378,8 +383,8 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
         y[i] = IloNumVarArray (env, n, 0, 1, ILOINT);
     
     int nb=2*m*n;
-    IloNumVarArray tabVar(env, nb, 0, IloInfinity, ILOINT);
-    IloNumArray tabVal (env, nb, 0, IloInfinity, ILOINT);
+    IloNumVarArray tabVar(env, nb);
+    IloNumArray tabVal (env, nb);
     int pos, pos2;
     for (int i=0; i<m; i++){
         for (int j=0; j<n ; j++){
@@ -387,8 +392,13 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
             pos2= pos + n*m;
             tabVar[pos] = x[i][j];
             tabVar[pos2] = y[i][j];
-            tabVal[pos] = val_X[i][j];
-            tabVal[pos2] = val_Y[i][j];
+            tabVal[pos]=tabBestSol[i][j];
+//            tabVal[pos] = val_X[i][j];
+//            tabVal[pos2] = val_Y[i][j];
+            if ( tabBestSol[i][j] >0)
+                tabVal[pos2] = 1;
+            else
+                tabVal[pos2]=0;
         }
     }
     
@@ -469,15 +479,15 @@ float lastPostOptim( int m , int n, int * tOffre_a, int * tDemand_b, int ** tCou
     
     //on va ensuite passer en paramètre à cplex la meilleure solution obtenue : les valeurs des variables d'abord
     //la fction addMIPStart précise à Cplex qu'il doit commencer à chercher une meilleure solution par rapport à cette solution
-    for (int i=0; i<m; i++){
-        cplex.addMIPStart(x[i], val_X[i]);
-    }
-
-    for (int i=0; i<m; i++){
-        cplex.addMIPStart(y[i], val_Y[i]);
-    }
+//    for (int i=0; i<m; i++){
+//        cplex.addMIPStart(x[i], val_X[i]);
+//    }
+//
+//    for (int i=0; i<m; i++){
+//        cplex.addMIPStart(y[i], val_Y[i]);
+//    }
     
-//     cplex.addMIPStart(tabVar, tabVal);
+     cplex.addMIPStart(tabVar, tabVal);
     
     
     // ------------------ AFFICHAGE ET OPTIMISATION ----------------
@@ -560,7 +570,7 @@ float globalModel(int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar
     IloArray<IloNumVarArray> x (env, m);//m ici est le nombre de sinks voir sample.h
     //chaque x[i] est un tableau de m variables reelles
     for(int i=0 ; i<m ; i++)
-        x[i] = IloNumVarArray(env, n, 0.0, IloInfinity, ILOINT);
+        x[i] = IloNumVarArray(env, n, 0.0, IloInfinity);
     
     
     IloArray<IloNumVarArray> y (env, m);//m ici est le nombre de sinks voir sample.h

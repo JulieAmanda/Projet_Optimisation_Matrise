@@ -324,58 +324,58 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
         cout << endl;
         cout << "lambda est : " << I_cour.lambda << endl;
         
-        cout << endl;
-        cout << "tab multiplyers it prec" << endl;
-        for (int i=0; i<m; i++){
-            for (int j=0; j<n; j++)
-                cout<<I_prec.multiplyers[i][j] << " ";
-            cout << endl ;
-        } //   affichons la table des sous-gradients
-        
-        
-        cout << endl;
-        cout << "tab multiplyers" << endl;
-        for (int i=0; i<m; i++){
-            for (int j=0; j<n; j++)
-                cout<<I_cour.multiplyers[i][j] << " ";
-            cout << endl ;
-        } //   affichons la table des sous-gradients
-        
+//        cout << endl;
+//        cout << "tab multiplyers it prec" << endl;
+//        for (int i=0; i<m; i++){
+//            for (int j=0; j<n; j++)
+//                cout<<I_prec.multiplyers[i][j] << " ";
+//            cout << endl ;
+//        } //   affichons la table des sous-gradients
+//        
+//        
+//        cout << endl;
+//        cout << "tab multiplyers" << endl;
+//        for (int i=0; i<m; i++){
+//            for (int j=0; j<n; j++)
+//                cout<<I_cour.multiplyers[i][j] << " ";
+//            cout << endl ;
+//        } //   affichons la table des sous-gradients
+//        
         
         // --- affichage des solutions des ssPb et comparaison
         
-        makeSpace();
-        cout << "solutions et valeurs de l'instance précédente" << endl;
+//        makeSpace();
+//        cout << "solutions et valeurs de l'instance précédente" << endl;
 
-        cout << "tab x_ijˆs" << endl;
-        affichTabSolutions(m, n, I_prec.tX_ij);//voir subpb.cpp
-        
-        cout << endl;
-        cout << "tab x_ijˆd" << endl;
-        affichTabSolutions(m,n, I_prec.tW_ij );  //affichons la transposée -- voir fonction dans subgradient.cpp
-        
-        cout << endl;
-        cout << "tab alpha_i_j" << endl;
-        affichTabSolutions(m,n,I_prec.tSubGrad ); //   affichons la table des sous-gradients
-        
+//        cout << "tab x_ijˆs" << endl;
+//        affichTabSolutions(m, n, I_prec.tX_ij);//voir subpb.cpp
+//
+//        cout << endl;
+//        cout << "tab x_ijˆd" << endl;
+//        affichTabSolutions(m,n, I_prec.tW_ij );  //affichons la transposée -- voir fonction dans subgradient.cpp
+//
+//        cout << endl;
+//        cout << "tab alpha_i_j" << endl;
+//        affichTabSolutions(m,n,I_prec.tSubGrad ); //   affichons la table des sous-gradients
+//
        
       
-        makeSpace(); //espace à l'affichage (voir subpb.cpp)
-        cout << "solutions et valeurs de l'instance courante" << endl;
-
-        // --- affichage des solutions des ssPb et comparaison
-        
-        cout << "tab x_ijˆs" << endl;
-        affichTabSolutions(m, n, I_cour.tX_ij);
-        
-        cout << endl;
-        cout << "tab x_ijˆd" << endl;
-        affichTabSolutions(m,n, I_cour.tW_ij );  //affichons la transposée -- voir fonction dans subgradient.cpp
-        
-        cout << endl;
-        cout << "tab alpha_i_j" << endl;
-        affichTabSolutions(m,n,I_cour.tSubGrad ); //   affichons la table des sous-gradients
-        
+//        makeSpace(); //espace à l'affichage (voir subpb.cpp)
+//        cout << "solutions et valeurs de l'instance courante" << endl;
+//
+//        // --- affichage des solutions des ssPb et comparaison
+//
+//        cout << "tab x_ijˆs" << endl;
+//        affichTabSolutions(m, n, I_cour.tX_ij);
+//
+//        cout << endl;
+//        cout << "tab x_ijˆd" << endl;
+//        affichTabSolutions(m,n, I_cour.tW_ij );  //affichons la transposée -- voir fonction dans subgradient.cpp
+//
+//        cout << endl;
+//        cout << "tab alpha_i_j" << endl;
+//        affichTabSolutions(m,n,I_cour.tSubGrad ); //   affichons la table des sous-gradients
+//
 
         
         I_prec.updateInstance(m, n, I_cour);
@@ -385,31 +385,34 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     
     
     
-    cout << "le nombre d'iterations est :  " << iteratnNumber << endl;
-    cout << "la meilleure borne inf de 15 est  :  " << meilleur_bInf_a << endl;
-    cout << "la meilleure borne inf de 30 est  :  " << meilleur_bInf_b << endl;
+    cout << "le nombre d'iterations est : " << iteratnNumber << endl;
+    cout << "la meilleure borne inf de 15 est : " << meilleur_bInf_a << endl;
+    cout << "la meilleure borne inf de 30 est : " << meilleur_bInf_b << endl;
     
     //on recupère la veleur de la meilleure solution trouvée dans la variable qui se trouve dans le main
     bestSolValue=BestBornSup;
-    cout << "la meilleure borne supest  :  " << BestBornSup << endl;
+    cout << "la meilleure borne sup est : " << BestBornSup << endl;
     
     for (int i=0; i<historiqSol[0]; i++)
          cout<< tabBornsup[i] << "   " ;
     
     cout<<endl;
     
-    cout<< " la valeur de la meilleure solution est : "<< BestBornSup << endl;
+//    cout<< " la valeur de la meilleure solution est : "<< BestBornSup << endl;
+//    
+//    
+//    cout<< "la table de la meilleure solution est est : "<< endl;
+//    
+//    for(int i=0 ; i<m ; i++)
+//    {
+//        for(int j=0; j<n ; j++)
+//            cout << tabBestSol[i][j] << "  " ;
+//        cout<<endl;
+//    }
+//    
+    float valsol = slopeRealValue(m, n, tabBestSol, tCoutFix, tCoutVar);
+    cout<< "la valeur de la meilleure solution évaluée dans la fonction objectif est : " << valsol << endl ;
     
-    
-    cout<< "la table de la meilleure solution est est : "<< endl;
-    
-    for(int i=0 ; i<m ; i++)
-    {
-        for(int j=0; j<n ; j++)
-            cout << tabBestSol[i][j] << "  " ;
-        cout<<endl;
-    }
-
     cout << "le nombre de solution calculée ( nbre de fois que l'heuristique a été appelée) est : " << nbCallHrstq << endl;
     
     //  ***  on libere les pointeurs qui ont ete utiliser pour stocker les données
