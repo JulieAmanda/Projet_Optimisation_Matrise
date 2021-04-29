@@ -55,7 +55,7 @@ bool lowerBndVariation(int nbIterationsMax, bool & valueUpdated, float & optimal
 
 //---------- implémentation de l'algorithme du sous-gradient --------//
 
-IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, int * tabDistAleatr ,  int ** tabBestSol, float & bestSolValue, int ** historiqY_ij, int & nbCallHrstq){
+IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** tCoutVar, int ** tCoutFix, int ** tCapacity, int * tabDistAleatr ,  int ** tabBestSol, int ** tabBestSol_Y, float & bestSolValue, int ** historiqY_ij, int & nbCallHrstq){
     
     
     // on crée deux var booléenes nous permettrons de verifier si la borne min change au fil de a ( repectivement b) itérations
@@ -133,8 +133,8 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     
    //on initialise la borne sup par la solution du problème global de base à la racine de CPLEX
     float BestBornSup = 1000000;
-  BestBornSup= ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, ignore, state,  BestBornSup, tabBestSol, historiqY_ij, nbCallHrstq);//cette méthode permet de calculer une nouvelle solution réalisable du problème (P) (en considérant les informations de state et ignore. Si elle trouve une borne sup meilleure que la courante, elle va mettre à jour bestsol et bestbornsup et à chaque appel il met à jour historiqY_ij.
-    historiqSol[1]= BestBornSup ; // on va garder cette premiere borne sup dans l'historique
+  BestBornSup= ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity, ignore, state,  BestBornSup, tabBestSol, tabBestSol_Y, historiqY_ij, nbCallHrstq);//cette méthode permet de calculer une nouvelle solution réalisable du problème (P) (en considérant les informations de state et ignore. Si elle trouve une borne sup meilleure que la courante, elle va mettre à jour bestsol et bestbornsup et à chaque appel il met à jour historiqY_ij.
+    tabBornsup[0]= BestBornSup ; // on va garder cette premiere borne sup dans l'historique
     historiqSol[0]=1; // on met à jour la taille du tableau
     
     
@@ -255,7 +255,7 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
                
                 //avec la solution issue du slope scaling, on va calculer une nvelle  la borne supérieure en resolvant le probleme global restreint par la fermeture des arcs dont state=0
                 //c'est également ds cette méthode qu'on contruit l'historique des y_ij et qu'o recueille la meilleure solution
-                float bornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity,ignore, state,BestBornSup, tabBestSol, historiqY_ij, nbCallHrstq);
+                float bornSup = ModelBase_Bsup( m , n, tOffre, tDemand, tCoutVar, tCoutFix, tCapacity,ignore, state,BestBornSup, tabBestSol,tabBestSol_Y, historiqY_ij, nbCallHrstq);
 
                 cout<<"borne sup évaluée d'après le modèle global est : "<< bornSup ;
                 cout << endl;
@@ -389,12 +389,15 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
     cout << "la meilleure borne inf de 15 est : " << meilleur_bInf_a << endl;
     cout << "la meilleure borne inf de 30 est : " << meilleur_bInf_b << endl;
     
+    cout << "la liste de toutes les bornes sup obtenues est : "<< endl ;
+    
+    for (int i=0; i<historiqSol[0]; i++)
+        cout<< tabBornsup[i] << "   " ;
+    cout << endl;
+    
     //on recupère la veleur de la meilleure solution trouvée dans la variable qui se trouve dans le main
     bestSolValue=BestBornSup;
     cout << "la meilleure borne sup est : " << BestBornSup << endl;
-    
-    for (int i=0; i<historiqSol[0]; i++)
-         cout<< tabBornsup[i] << "   " ;
     
     cout<<endl;
     
@@ -410,8 +413,14 @@ IterationDetails Subgradient( int m, int n, int * tOffre, int * tDemand, int ** 
 //        cout<<endl;
 //    }
 //    
-    float valsol = slopeRealValue(m, n, tabBestSol, tCoutFix, tCoutVar);
-    cout<< "la valeur de la meilleure solution évaluée dans la fonction objectif est : " << valsol << endl ;
+    float valsol=0 ;
+    
+    for (int i=0; i<m ;++i){
+        for (int j=0; j<n; j++)
+            valsol += tCoutFix[i][j]*tabBestSol_Y[i][j] + tCoutVar[i][j]*tabBestSol[i][j];
+    }
+    
+     cout << "la valeur de la meilleure solution évaluée dans la fonction objectif est -realval : " << valsol << endl ;
     
     cout << "le nombre de solution calculée ( nbre de fois que l'heuristique a été appelée) est : " << nbCallHrstq << endl;
     

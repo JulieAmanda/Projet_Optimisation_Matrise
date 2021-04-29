@@ -45,7 +45,7 @@ bool lowerBndVariation(int nbIterationsMax, bool & updateStatus,  float & optima
 // count permet de savoir à combien de valeurs consécutives égales l'on est rendu
 
 
-IterationDetails Subgradient( int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int * tabDistAleatr,  int ** tabBestSol, float & bestSolValue, int ** historiqY_ij, int & nbCallHrstq);
+IterationDetails Subgradient( int m, int n, int * tOffre_a, int * tDemand_b, int ** tCoutVar, int ** tCoutFix, int ** tCapacity,  int * tabDistAleatr,  int ** tabBestSol, int ** tabBestSol_Y, float & bestSolValue, int ** historiqY_ij, int & nbCallHrstq);
 //tabSgrad_t_1 : table of the subgradients at the previous iteration
 //iteration : the current iteration
 

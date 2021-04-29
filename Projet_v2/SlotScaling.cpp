@@ -411,8 +411,8 @@ void slopeScaleMethod( int m, int n, int ** tabSolScaling, float & bornSup,  int
 
 //   // on va ensuite mettre à jour la fermeture et l'ouverture des arcs en modifiant l'etat des arcs dans le tableau state
     //cette partie n'est pas neccessaire si on ajoute la postOpt car ces lignes seront appelée à la fin de toute la méthode.
-//        updateTabState(bestSol, state, m, n);
-//        bornSup= bestVal; //on sauvegarde la meilleure borne sup retournée par la procédure
+        updateTabState(bestSol, state, m, n);
+        bornSup= bestVal; //on sauvegarde la meilleure borne sup retournée par la procédure
 
 
 
